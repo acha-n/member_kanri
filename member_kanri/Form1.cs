@@ -71,6 +71,8 @@ namespace member_kanri
             age_box.Text = splitText[3];
             affiliation_box.Text = splitText[4];
             comment_box.Text = splitText[5];
+
+            // ToDos: 編集可能にする
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)
