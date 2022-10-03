@@ -17,7 +17,7 @@ namespace member_kanri
             InitializeComponent();
         }
 
-        //追加
+        //追加、更新
         private void addition_button_Click(object sender, EventArgs e)
         {
             for (int i = 0; i < listBox1.Items.Count; i++)
@@ -29,27 +29,20 @@ namespace member_kanri
                 //idboxにはいってる値と同じ値をもつ行があるとき（リストボックスの中のiの情報のなかの[0]）
                 if (id_box.Text == listBox1.Items[i].ToString().Split(' ')[0])
                 {
-                    /*//エラーメッセージを表示して処理を終了
-                    MessageBox.Show("入力できません",
-                        "エラー",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);*/
-                    MessageBox.Show("上書きしますか", "エラー",
+                    //メッセージボックスを出す
+                    MessageBox.Show("上書きしますか", "確認",
                         　　　　　　MessageBoxButtons.YesNo);
-                    if(MessageBox.Show("上書きしますか","エラー",
+                    
+                    //yesを押したとき（テキストボックスに入ってるテキストをリストボックス内の同じIDに上書き）
+                    if(MessageBox.Show("上書きしますか","確認",
                         MessageBoxButtons.YesNo)==DialogResult.Yes)
                     {
-                        //同じidの人にtextboxを上書き
-                        
-
+                        listBox1.Items[i] = id_box.Text + " " + name_box.Text + " " + sex_box.Text + " " + age_box.Text + " " + affiliation_box.Text + " " + comment_box.Text;
                     }
-                    return;
-                  /*  else
-                    {
-                        //追加せずにおわり                    
-                    }*/
+                    return;                
                 }
             }
+            //↑じゃない場合、テキストボックスの中身を空白いれてリストボックスに追加
             listBox1.Items.Add(id_box.Text + " " + name_box.Text + " " + sex_box.Text + " " + age_box.Text + " " + affiliation_box.Text + " " + comment_box.Text);
         }
         //削除
@@ -73,13 +66,15 @@ namespace member_kanri
         //リストボックス
         private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
+            //選択したらテキストボックスに表示↓
+
             //ListBoxという型に、ListBoxのsenderをいれる
             ListBox listBox = (ListBox)sender;
             //listbox.textをtextという変数にした
             string text = listBox.Text;
             //↑のtextを.spritで配列にする
             string[] splitText = text.Split(' ');
-            //配列にしたtextboxをそれぞれに代入
+            //配列にしたtextbox(splitText)をそれぞれに代入
             id_box.Text = splitText[0];
             name_box.Text = splitText[1];
             sex_box.Text = splitText[2];
