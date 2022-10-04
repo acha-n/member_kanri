@@ -31,15 +31,15 @@ namespace member_kanri
                 {
                     //メッセージボックスを出す
                     MessageBox.Show("上書きしますか", "確認",
-                        　　　　　　MessageBoxButtons.YesNo);
-                    
+                        MessageBoxButtons.YesNo);
+
                     //yesを押したとき（テキストボックスに入ってるテキストをリストボックス内の同じIDに上書き）
-                    if(MessageBox.Show("上書きしますか","確認",
-                        MessageBoxButtons.YesNo)==DialogResult.Yes)
+                    if (MessageBox.Show("上書きしますか", "確認",
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         listBox1.Items[i] = id_box.Text + " " + name_box.Text + " " + sex_box.Text + " " + age_box.Text + " " + affiliation_box.Text + " " + comment_box.Text;
                     }
-                    return;                
+                    return;
                 }
             }
             //↑じゃない場合、テキストボックスの中身を空白いれてリストボックスに追加
@@ -53,7 +53,7 @@ namespace member_kanri
             {
                 listBox1.Items.Remove(listBox1.SelectedItem);
             }
-            
+
             //選択されなかったらメッセージボックスを出す
             else
             {
@@ -61,7 +61,7 @@ namespace member_kanri
                  "エラー",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
-            }        
+            }
         }
         //リストボックス
         private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
@@ -87,7 +87,7 @@ namespace member_kanri
                 affiliation_box.Text = splitText[4];
                 comment_box.Text = splitText[5];
             }
-                //↑以外の時（追加、削除したとき）
+            //↑以外の時（追加、削除したとき）
             else
             {
                 id_box.Text = "";
@@ -98,5 +98,12 @@ namespace member_kanri
                 comment_box.Text = "";
             }
         }
+
+        //とじるぼたん
+        private void close_button_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+     
     }
 }
