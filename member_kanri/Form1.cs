@@ -66,21 +66,37 @@ namespace member_kanri
         //リストボックス
         private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
+
             //選択したらテキストボックスに表示↓
 
             //ListBoxという型に、ListBoxのsenderをいれる
             ListBox listBox = (ListBox)sender;
             //listbox.textをtextという変数にした
             string text = listBox.Text;
-            //↑のtextを.spritで配列にする
-            string[] splitText = text.Split(' ');
-            //配列にしたtextbox(splitText)をそれぞれに代入
-            id_box.Text = splitText[0];
-            name_box.Text = splitText[1];
-            sex_box.Text = splitText[2];
-            age_box.Text = splitText[3];
-            affiliation_box.Text = splitText[4];
-            comment_box.Text = splitText[5];
+
+            //textが空の時
+            if (text != "")
+            {
+                //↑のtextを.spritで配列にする
+                string[] splitText = text.Split(' ');
+                //配列にしたtextbox(splitText)をそれぞれに代入
+                id_box.Text = splitText[0];
+                name_box.Text = splitText[1];
+                sex_box.Text = splitText[2];
+                age_box.Text = splitText[3];
+                affiliation_box.Text = splitText[4];
+                comment_box.Text = splitText[5];
+            }
+                //↑以外の時（追加、削除したとき）
+            else
+            {
+                id_box.Text = "";
+                name_box.Text = "";
+                sex_box.Text = "";
+                age_box.Text = "";
+                affiliation_box.Text = "";
+                comment_box.Text = "";
+            }
         }
     }
 }
