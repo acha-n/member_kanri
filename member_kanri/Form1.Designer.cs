@@ -37,13 +37,20 @@
             this.close_button = new System.Windows.Forms.Button();
             this.addition_button = new System.Windows.Forms.Button();
             this.delete_button = new System.Windows.Forms.Button();
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lable = new System.Windows.Forms.Label();
             this.id_box = new System.Windows.Forms.TextBox();
             this.sex_box = new System.Windows.Forms.ComboBox();
             this.age_box = new System.Windows.Forms.NumericUpDown();
             this.affiliation_box = new System.Windows.Forms.ComboBox();
+            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.age_box)).BeginInit();
             this.SuspendLayout();
             // 
@@ -129,7 +136,7 @@
             // 
             this.close_button.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.close_button.ForeColor = System.Drawing.Color.Teal;
-            this.close_button.Location = new System.Drawing.Point(482, 692);
+            this.close_button.Location = new System.Drawing.Point(482, 738);
             this.close_button.Margin = new System.Windows.Forms.Padding(4);
             this.close_button.Name = "close_button";
             this.close_button.Size = new System.Drawing.Size(118, 39);
@@ -142,7 +149,7 @@
             // 
             this.addition_button.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.addition_button.ForeColor = System.Drawing.Color.Teal;
-            this.addition_button.Location = new System.Drawing.Point(202, 692);
+            this.addition_button.Location = new System.Drawing.Point(202, 738);
             this.addition_button.Margin = new System.Windows.Forms.Padding(4);
             this.addition_button.Name = "addition_button";
             this.addition_button.Size = new System.Drawing.Size(118, 39);
@@ -155,7 +162,7 @@
             // 
             this.delete_button.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.delete_button.ForeColor = System.Drawing.Color.Teal;
-            this.delete_button.Location = new System.Drawing.Point(341, 692);
+            this.delete_button.Location = new System.Drawing.Point(338, 738);
             this.delete_button.Margin = new System.Windows.Forms.Padding(4);
             this.delete_button.Name = "delete_button";
             this.delete_button.Size = new System.Drawing.Size(118, 39);
@@ -163,17 +170,6 @@
             this.delete_button.Text = "削除";
             this.delete_button.UseVisualStyleBackColor = true;
             this.delete_button.Click += new System.EventHandler(this.delete_button_Click);
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 20;
-            this.listBox1.Location = new System.Drawing.Point(202, 515);
-            this.listBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(397, 164);
-            this.listBox1.TabIndex = 6;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged_1);
             // 
             // label1
             // 
@@ -207,6 +203,7 @@
             // 
             // sex_box
             // 
+            this.sex_box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.sex_box.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.sex_box.FormattingEnabled = true;
             this.sex_box.Items.AddRange(new object[] {
@@ -227,6 +224,7 @@
             // 
             // affiliation_box
             // 
+            this.affiliation_box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.affiliation_box.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.affiliation_box.FormattingEnabled = true;
             this.affiliation_box.Items.AddRange(new object[] {
@@ -238,19 +236,76 @@
             this.affiliation_box.Size = new System.Drawing.Size(134, 38);
             this.affiliation_box.TabIndex = 21;
             // 
+            // listView1
+            // 
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader8,
+            this.columnHeader9,
+            this.columnHeader10,
+            this.columnHeader11,
+            this.columnHeader12,
+            this.columnHeader13});
+            this.listView1.FullRowSelect = true;
+            this.listView1.HideSelection = false;
+            this.listView1.Location = new System.Drawing.Point(100, 512);
+            this.listView1.Margin = new System.Windows.Forms.Padding(1);
+            this.listView1.MultiSelect = false;
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(567, 217);
+            this.listView1.TabIndex = 22;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "ID";
+            this.columnHeader8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeader8.Width = 61;
+            // 
+            // columnHeader9
+            // 
+            this.columnHeader9.Text = "名前";
+            this.columnHeader9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeader9.Width = 127;
+            // 
+            // columnHeader10
+            // 
+            this.columnHeader10.Text = "年齢";
+            this.columnHeader10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeader10.Width = 56;
+            // 
+            // columnHeader11
+            // 
+            this.columnHeader11.Text = "性別";
+            this.columnHeader11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeader11.Width = 67;
+            // 
+            // columnHeader12
+            // 
+            this.columnHeader12.Text = "所属";
+            this.columnHeader12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeader12.Width = 62;
+            // 
+            // columnHeader13
+            // 
+            this.columnHeader13.Text = "コメント";
+            this.columnHeader13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeader13.Width = 130;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Teal;
-            this.ClientSize = new System.Drawing.Size(595, 595);
+            this.ClientSize = new System.Drawing.Size(744, 790);
+            this.Controls.Add(this.listView1);
             this.Controls.Add(this.affiliation_box);
             this.Controls.Add(this.age_box);
             this.Controls.Add(this.sex_box);
             this.Controls.Add(this.id_box);
             this.Controls.Add(this.lable);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.delete_button);
             this.Controls.Add(this.addition_button);
             this.Controls.Add(this.close_button);
@@ -281,13 +336,20 @@
         private System.Windows.Forms.Button close_button;
         private System.Windows.Forms.Button addition_button;
         private System.Windows.Forms.Button delete_button;
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lable;
         private System.Windows.Forms.TextBox id_box;
         private System.Windows.Forms.ComboBox sex_box;
         private System.Windows.Forms.NumericUpDown age_box;
         private System.Windows.Forms.ComboBox affiliation_box;
+        private System.Windows.Forms.HelpProvider helpProvider1;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ColumnHeader columnHeader9;
+        private System.Windows.Forms.ColumnHeader columnHeader10;
+        private System.Windows.Forms.ColumnHeader columnHeader11;
+        private System.Windows.Forms.ColumnHeader columnHeader12;
+        private System.Windows.Forms.ColumnHeader columnHeader13;
     }
 }
 

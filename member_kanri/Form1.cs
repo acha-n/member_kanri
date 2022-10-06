@@ -20,14 +20,14 @@ namespace member_kanri
         //追加、更新
         private void addition_button_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < listBox1.Items.Count; i++)
+            for (int i = 0; i < listView1.Items.Count; i++)
             {
                 //リストボックスの中の行の集まりの中の［i］行目(1人分) 
-                //listBox1.Items[i];をhogeという変数に代入してる。ifで省略して書ける
-                //object hoge = listBox1.Items[i];
+                //listView1.Items[i];をhogeという変数に代入してる。ifで省略して書ける
+                //object hoge = listView1.Items[i];
 
                 //idboxにはいってる値と同じ値をもつ行があるとき（リストボックスの中のiの情報のなかの[0]）
-                if (id_box.Text == listBox1.Items[i].ToString().Split(' ')[0])
+                if (id_box.Text == listView1.Items[i].ToString().Split(' ')[0])
                 {
                     //メッセージボックスを出す
                     MessageBox.Show("上書きしますか", "確認",
@@ -37,23 +37,30 @@ namespace member_kanri
                     if (MessageBox.Show("上書きしますか", "確認",
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        listBox1.Items[i] = id_box.Text + " " + name_box.Text + " " + sex_box.Text + " " + age_box.Text + " " + affiliation_box.Text + " " + comment_box.Text;
+                        //listView1.Items[i] = id_box.Text + " " + name_box.Text + " " + sex_box.Text + " " + age_box.Text + " " + affiliation_box.Text + " " + comment_box.Text;
+                        listView1.Items.Add(id_box.Text + " " + name_box.Text  + " " + age_box.Text + " " + sex_box.Text + " " + affiliation_box.Text + " " + comment_box.Text);
                     }
-                    return;
+                    return; 
                 }
             }
             //↑じゃない場合、テキストボックスの中身を空白いれてリストボックスに追加
-            listBox1.Items.Add(id_box.Text + " " + name_box.Text + " " + sex_box.Text + " " + age_box.Text + " " + affiliation_box.Text + " " + comment_box.Text);
+           // listView1.Items.Add(id_box.Text).SubItems.Add(name_box.Text);
+            ListViewItem lvi = listView1.Items.Add(id_box.Text);
+            lvi.SubItems.Add(name_box.Text);
+            lvi.SubItems.Add(age_box.Text);
+            lvi.SubItems.Add(sex_box.Text);
+            lvi.SubItems.Add(affiliation_box.Text);
+            lvi.SubItems.Add(comment_box.Text);
         }
         //削除
         private void delete_button_Click(object sender, EventArgs e)
         {
             //もし選択されたら、選択されたものを消す
-            if (listBox1.SelectedIndex != -1)
+            if (listView1.SelectedItems.Count >0)
             {
-                listBox1.Items.Remove(listBox1.SelectedItem);
-            }
+                listView1.Items.Remove(listView1.SelectedItems[0]);
 
+            }
             //選択されなかったらメッセージボックスを出す
             else
             {
@@ -63,30 +70,32 @@ namespace member_kanri
                 MessageBoxIcon.Error);
             }
         }
-        //リストボックス
-        private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+
+        //とじるぼたん
+        private void close_button_Click(object sender, EventArgs e)
         {
+            this.Close();
+        }
 
+        //りすとびゅー
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
             //選択したらテキストボックスに表示↓
+            ListView listView = (ListView)sender;
+            //listview.textをtextという変数にした
+            ListView.SelectedListViewItemCollection item = listView.SelectedItems;
 
-            //ListBoxという型に、ListBoxのsenderをいれる
-            ListBox listBox = (ListBox)sender;
-            //listbox.textをtextという変数にした
-            string text = listBox.Text;
-
-            //textが空の時
-            if (text != "")
-            {
-                //↑のtextを.spritで配列にする
-                string[] splitText = text.Split(' ');
-                //配列にしたtextbox(splitText)をそれぞれに代入
-                id_box.Text = splitText[0];
-                name_box.Text = splitText[1];
-                sex_box.Text = splitText[2];
-                age_box.Text = splitText[3];
-                affiliation_box.Text = splitText[4];
-                comment_box.Text = splitText[5];
+            //listviewのかうんとが０のとき
+            if(listView.SelectedItems.Count > 0)
+            { 
+            id_box.Text = item[0].SubItems[0].Text;
+            name_box.Text = item[0].SubItems[1].Text;
+            age_box.Text = item[0].SubItems[2].Text;
+            sex_box.Text = item[0].SubItems[3].Text;
+            affiliation_box.Text = item[0].SubItems[4].Text;
+            comment_box.Text = item[0].SubItems[5].Text;
             }
+         
             //↑以外の時（追加、削除したとき）
             else
             {
@@ -97,13 +106,7 @@ namespace member_kanri
                 affiliation_box.Text = "";
                 comment_box.Text = "";
             }
+            
         }
-
-        //とじるぼたん
-        private void close_button_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-     
     }
 }
