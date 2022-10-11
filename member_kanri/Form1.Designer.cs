@@ -51,6 +51,7 @@
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.output_button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.age_box)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,7 +62,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label2.Location = new System.Drawing.Point(121, 250);
+            this.label2.Location = new System.Drawing.Point(123, 213);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(75, 30);
@@ -75,7 +76,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label3.Location = new System.Drawing.Point(121, 145);
+            this.label3.Location = new System.Drawing.Point(123, 125);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(75, 30);
@@ -89,7 +90,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label4.Location = new System.Drawing.Point(123, 197);
+            this.label4.Location = new System.Drawing.Point(123, 169);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(75, 30);
@@ -103,7 +104,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label5.Location = new System.Drawing.Point(90, 298);
+            this.label5.Location = new System.Drawing.Point(93, 250);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(108, 30);
@@ -114,7 +115,7 @@
             // 
             this.name_box.AcceptsReturn = true;
             this.name_box.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.name_box.Location = new System.Drawing.Point(205, 94);
+            this.name_box.Location = new System.Drawing.Point(205, 71);
             this.name_box.Margin = new System.Windows.Forms.Padding(5);
             this.name_box.Multiline = true;
             this.name_box.Name = "name_box";
@@ -125,7 +126,7 @@
             // 
             this.comment_box.AcceptsReturn = true;
             this.comment_box.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.comment_box.Location = new System.Drawing.Point(204, 298);
+            this.comment_box.Location = new System.Drawing.Point(206, 250);
             this.comment_box.Margin = new System.Windows.Forms.Padding(4);
             this.comment_box.Multiline = true;
             this.comment_box.Name = "comment_box";
@@ -136,7 +137,7 @@
             // 
             this.close_button.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.close_button.ForeColor = System.Drawing.Color.Teal;
-            this.close_button.Location = new System.Drawing.Point(482, 738);
+            this.close_button.Location = new System.Drawing.Point(547, 686);
             this.close_button.Margin = new System.Windows.Forms.Padding(4);
             this.close_button.Name = "close_button";
             this.close_button.Size = new System.Drawing.Size(118, 39);
@@ -149,7 +150,7 @@
             // 
             this.addition_button.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.addition_button.ForeColor = System.Drawing.Color.Teal;
-            this.addition_button.Location = new System.Drawing.Point(202, 738);
+            this.addition_button.Location = new System.Drawing.Point(98, 686);
             this.addition_button.Margin = new System.Windows.Forms.Padding(4);
             this.addition_button.Name = "addition_button";
             this.addition_button.Size = new System.Drawing.Size(118, 39);
@@ -162,7 +163,7 @@
             // 
             this.delete_button.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.delete_button.ForeColor = System.Drawing.Color.Teal;
-            this.delete_button.Location = new System.Drawing.Point(338, 738);
+            this.delete_button.Location = new System.Drawing.Point(397, 686);
             this.delete_button.Margin = new System.Windows.Forms.Padding(4);
             this.delete_button.Name = "delete_button";
             this.delete_button.Size = new System.Drawing.Size(118, 39);
@@ -175,7 +176,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.Location = new System.Drawing.Point(121, 97);
+            this.label1.Location = new System.Drawing.Point(121, 80);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 30);
             this.label1.TabIndex = 14;
@@ -185,7 +186,7 @@
             // 
             this.lable.AutoSize = true;
             this.lable.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lable.Location = new System.Drawing.Point(95, 48);
+            this.lable.Location = new System.Drawing.Point(93, 33);
             this.lable.Name = "lable";
             this.lable.Size = new System.Drawing.Size(103, 30);
             this.lable.TabIndex = 17;
@@ -195,7 +196,7 @@
             // 
             this.id_box.AcceptsReturn = true;
             this.id_box.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.id_box.Location = new System.Drawing.Point(204, 45);
+            this.id_box.Location = new System.Drawing.Point(205, 24);
             this.id_box.Multiline = true;
             this.id_box.Name = "id_box";
             this.id_box.Size = new System.Drawing.Size(395, 39);
@@ -209,7 +210,7 @@
             this.sex_box.Items.AddRange(new object[] {
             "男",
             "女"});
-            this.sex_box.Location = new System.Drawing.Point(205, 194);
+            this.sex_box.Location = new System.Drawing.Point(205, 161);
             this.sex_box.Name = "sex_box";
             this.sex_box.Size = new System.Drawing.Size(131, 38);
             this.sex_box.TabIndex = 19;
@@ -217,7 +218,7 @@
             // age_box
             // 
             this.age_box.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.age_box.Location = new System.Drawing.Point(203, 145);
+            this.age_box.Location = new System.Drawing.Point(205, 118);
             this.age_box.Name = "age_box";
             this.age_box.Size = new System.Drawing.Size(133, 37);
             this.age_box.TabIndex = 20;
@@ -231,7 +232,7 @@
             "営業部",
             "人事部",
             "開発部"});
-            this.affiliation_box.Location = new System.Drawing.Point(202, 247);
+            this.affiliation_box.Location = new System.Drawing.Point(205, 205);
             this.affiliation_box.Name = "affiliation_box";
             this.affiliation_box.Size = new System.Drawing.Size(134, 38);
             this.affiliation_box.TabIndex = 21;
@@ -247,7 +248,7 @@
             this.columnHeader13});
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(100, 512);
+            this.listView1.Location = new System.Drawing.Point(98, 464);
             this.listView1.Margin = new System.Windows.Forms.Padding(1);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
@@ -293,12 +294,25 @@
             this.columnHeader13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader13.Width = 130;
             // 
+            // output_button
+            // 
+            this.output_button.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.output_button.ForeColor = System.Drawing.Color.DarkCyan;
+            this.output_button.Location = new System.Drawing.Point(248, 686);
+            this.output_button.Name = "output_button";
+            this.output_button.Size = new System.Drawing.Size(118, 39);
+            this.output_button.TabIndex = 23;
+            this.output_button.Text = "出力";
+            this.output_button.UseVisualStyleBackColor = true;
+            this.output_button.Click += new System.EventHandler(this.output_button_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Teal;
             this.ClientSize = new System.Drawing.Size(744, 790);
+            this.Controls.Add(this.output_button);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.affiliation_box);
             this.Controls.Add(this.age_box);
@@ -350,6 +364,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader11;
         private System.Windows.Forms.ColumnHeader columnHeader12;
         private System.Windows.Forms.ColumnHeader columnHeader13;
+        private System.Windows.Forms.Button output_button;
     }
 }
 

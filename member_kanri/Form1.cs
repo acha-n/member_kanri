@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+
 
 namespace member_kanri
 {
@@ -24,22 +26,25 @@ namespace member_kanri
             {
                 //リストボックスの中の行の集まりの中の［i］行目(1人分) 
                 //listView1.Items[i];をhogeという変数に代入してる。ifで省略して書ける
-                //object hoge = listView1.Items[i];
+                string listId = listView1.Items[i].Text;
+                Console.WriteLine(listId);
 
                 //idboxにはいってる値と同じ値をもつ行があるとき（リストボックスの中のiの情報のなかの[0]）
-                if (id_box.Text == listView1.Items[i].ToString().Split(' ')[0])
+                if (id_box.Text == listId)
                 {
-                    //メッセージボックスを出す
-                    MessageBox.Show("上書きしますか", "確認",
-                        MessageBoxButtons.YesNo);
 
+                    //メッセージボックスを出す
                     //yesを押したとき（テキストボックスに入ってるテキストをリストボックス内の同じIDに上書き）
                     if (MessageBox.Show("上書きしますか", "確認",
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        //listView1.Items[i] = id_box.Text + " " + name_box.Text + " " + sex_box.Text + " " + age_box.Text + " " + affiliation_box.Text + " " + comment_box.Text;
-                        listView1.Items.Add(id_box.Text + " " + name_box.Text  + " " + age_box.Text + " " + sex_box.Text + " " + affiliation_box.Text + " " + comment_box.Text);
-                    }
+                        ListViewItem target = listView1.Items[i];
+                        target.SubItems[1].Text = name_box.Text;
+                        target.SubItems[2].Text = age_box.Text;
+                        target.SubItems[3].Text = sex_box.Text;
+                        target.SubItems[4].Text = affiliation_box.Text;
+                        target.SubItems[5].Text = comment_box.Text;
+                     }
                     return; 
                 }
             }
@@ -107,6 +112,49 @@ namespace member_kanri
                 comment_box.Text = "";
             }
             
+        }
+
+        //出力ボタンをおしたとき
+        private void output_button_Click(object sender, EventArgs e)
+        {
+            //SaveFileDialogの定義
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "ファイルを保存する";
+            //フォルダの場所の指定（用意してるだけだから変えていい）
+            saveFileDialog.InitialDirectory = @"C:\Users\afuru\OneDrive\ドキュメント\";
+            //ファイル名をoutputで用意してあげてる（変えていい）
+            saveFileDialog.FileName = @"output.csv";
+            //ダイアログのひょうじ
+            saveFileDialog.ShowDialog();
+            //OKおしたとき
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //steamwriterという型のswという変数に、()のなかでファイルの場所と名前を指定したものを代入
+                //（）のなかはダイアログで指定したファイルのこと↓
+                StreamWriter sw = new StreamWriter(saveFileDialog.FileName);
+
+                for (int i = 0; i < listView1.Items.Count; i++)
+                {
+                    //リストビューのアイテムをカンマ区切りに並べたものをＳに代入
+                    string s =
+                         listView1.Items[i].SubItems[0].Text +
+                         "," +
+                         listView1.Items[i].SubItems[1].Text +
+                         "," +
+                         listView1.Items[i].SubItems[2].Text +
+                         "," +
+                         listView1.Items[i].SubItems[3].Text +
+                         "," +
+                         listView1.Items[i].SubItems[4].Text +
+                         "," +
+                         listView1.Items[i].SubItems[5].Text;
+                    //swのなかにｓを１行ずつ書き込んで保存する
+                    sw.WriteLine(s);
+                }
+                //ファイルをとじる
+                sw.Close();
+            }
+            else { }
         }
     }
 }
