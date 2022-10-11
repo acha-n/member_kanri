@@ -154,7 +154,6 @@ namespace member_kanri
                 //ファイルをとじる
                 sw.Close();
             }
-           // else { }
         }
         //とりこみぼたん
         private void button1_Click(object sender, EventArgs e)
@@ -167,14 +166,23 @@ namespace member_kanri
             //ファイルを選択、OKおしたとき
             if (DialogResult != DialogResult.OK)
             {
+                //streamReaderの定義（ファイル開けるようにしてる）
                 StreamReader streamReader = new StreamReader(openFileDialog.FileName);
-                //よみこむ
-                string rd = streamReader.ReadToEnd();
-                string[] value = rd.Split(',');
-                for (int i = 0; i < value.Length; i++)
+                while(streamReader.Peek() != -1)
                 {
-                  
+                    //よみこむ
+                    string result = streamReader.ReadLine();
+                    //読み込んだものをスプリットで配列にする
+                    string[] listviewresults = result.Split(',');
+                    //配列にしたものをリストビューに入れる
+                    ListViewItem lvi = listView1.Items.Add(listviewresults[0]);
+                    lvi.SubItems.Add(listviewresults[1]);
+                    lvi.SubItems.Add(listviewresults[2]);
+                    lvi.SubItems.Add(listviewresults[3]);
+                    lvi.SubItems.Add(listviewresults[4]);
+                    lvi.SubItems.Add(listviewresults[5]);
                 }
+                //ファイルを閉じる
                 streamReader.Close();
             }
           
