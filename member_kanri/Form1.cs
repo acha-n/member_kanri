@@ -114,7 +114,7 @@ namespace member_kanri
             
         }
 
-        //出力ボタンをおしたとき
+        //出力ぼたん
         private void output_button_Click(object sender, EventArgs e)
         {
             //SaveFileDialogの定義
@@ -127,7 +127,7 @@ namespace member_kanri
             //ダイアログのひょうじ
             saveFileDialog.ShowDialog();
             //OKおしたとき
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (DialogResult != DialogResult.OK)
             {
                 //steamwriterという型のswという変数に、()のなかでファイルの場所と名前を指定したものを代入
                 //（）のなかはダイアログで指定したファイルのこと↓
@@ -154,7 +154,30 @@ namespace member_kanri
                 //ファイルをとじる
                 sw.Close();
             }
-            else { }
+           // else { }
+        }
+        //とりこみぼたん
+        private void button1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "ファイルを選択する";
+            openFileDialog.InitialDirectory = "";
+            openFileDialog.ShowDialog();
+
+            //ファイルを選択、OKおしたとき
+            if (DialogResult != DialogResult.OK)
+            {
+                StreamReader streamReader = new StreamReader(openFileDialog.FileName);
+                //よみこむ
+                string rd = streamReader.ReadToEnd();
+                string[] value = rd.Split(',');
+                for (int i = 0; i < value.Length; i++)
+                {
+                  
+                }
+                streamReader.Close();
+            }
+          
         }
     }
 }
