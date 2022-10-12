@@ -19,6 +19,8 @@ namespace member_kanri
             InitializeComponent();
         }
 
+
+
         //追加、更新
         private void addition_button_Click(object sender, EventArgs e)
         {
@@ -27,12 +29,10 @@ namespace member_kanri
                 //リストボックスの中の行の集まりの中の［i］行目(1人分) 
                 //listView1.Items[i];をhogeという変数に代入してる。ifで省略して書ける
                 string listId = listView1.Items[i].Text;
-                Console.WriteLine(listId);
 
                 //idboxにはいってる値と同じ値をもつ行があるとき（リストボックスの中のiの情報のなかの[0]）
                 if (id_box.Text == listId)
                 {
-
                     //メッセージボックスを出す
                     //yesを押したとき（テキストボックスに入ってるテキストをリストボックス内の同じIDに上書き）
                     if (MessageBox.Show("上書きしますか", "確認",
@@ -117,6 +117,7 @@ namespace member_kanri
         //出力ぼたん
         private void output_button_Click(object sender, EventArgs e)
         {
+            
             //SaveFileDialogの定義
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Title = "ファイルを保存する";
@@ -132,60 +133,81 @@ namespace member_kanri
                 //steamwriterという型のswという変数に、()のなかでファイルの場所と名前を指定したものを代入
                 //（）のなかはダイアログで指定したファイルのこと↓
                 StreamWriter sw = new StreamWriter(saveFileDialog.FileName);
-
+                
                 for (int i = 0; i < listView1.Items.Count; i++)
                 {
                     //リストビューのアイテムをカンマ区切りに並べたものをＳに代入
+                    //文字列の、は#comma#に置き換え
                     string s =
-                         listView1.Items[i].SubItems[0].Text +
+                         (listView1.Items[i].SubItems[0].Text).Replace(",", "#commma#") +
                          "," +
-                         listView1.Items[i].SubItems[1].Text +
+                         (listView1.Items[i].SubItems[1].Text).Replace(",", "#commma#") +
                          "," +
-                         listView1.Items[i].SubItems[2].Text +
+                         (listView1.Items[i].SubItems[2].Text).Replace(",", "#commma#") +
                          "," +
-                         listView1.Items[i].SubItems[3].Text +
+                         (listView1.Items[i].SubItems[3].Text).Replace(",", "#commma#") +
                          "," +
-                         listView1.Items[i].SubItems[4].Text +
+                         (listView1.Items[i].SubItems[4].Text).Replace(",", "#commma#") +
                          "," +
-                         listView1.Items[i].SubItems[5].Text;
+                         (listView1.Items[i].SubItems[5].Text).Replace(",", "#commma#");
                     //swのなかにｓを１行ずつ書き込んで保存する
                     sw.WriteLine(s);
                 }
                 //ファイルをとじる
                 sw.Close();
             }
+            id_box.Text = "";
+            name_box.Text = "";
+            age_box.Text = "";
+            sex_box.Text = "";
+            affiliation_box.Text = "";
+            comment_box.Text = "";
         }
         //とりこみぼたん
         private void button1_Click(object sender, EventArgs e)
         {
+
+
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Title = "ファイルを選択する";
             openFileDialog.InitialDirectory = "";
             openFileDialog.ShowDialog();
+
 
             //ファイルを選択、OKおしたとき
             if (DialogResult != DialogResult.OK)
             {
                 //streamReaderの定義（ファイル開けるようにしてる）
                 StreamReader streamReader = new StreamReader(openFileDialog.FileName);
-                while(streamReader.Peek() != -1)
+                //ファイルに文字があるだけループする
+                while (streamReader.Peek() != -1)
                 {
                     //よみこむ
                     string result = streamReader.ReadLine();
+
                     //読み込んだものをスプリットで配列にする
                     string[] listviewresults = result.Split(',');
+
                     //配列にしたものをリストビューに入れる
-                    ListViewItem lvi = listView1.Items.Add(listviewresults[0]);
-                    lvi.SubItems.Add(listviewresults[1]);
-                    lvi.SubItems.Add(listviewresults[2]);
-                    lvi.SubItems.Add(listviewresults[3]);
-                    lvi.SubItems.Add(listviewresults[4]);
-                    lvi.SubItems.Add(listviewresults[5]);
+                    ListViewItem lvi = listView1.Items.Add(listviewresults[0].Replace("#commma#", ","));
+                    lvi.SubItems.Add(listviewresults[1].Replace("#commma#", ","));
+                    lvi.SubItems.Add(listviewresults[2].Replace("#commma#", ","));
+                    lvi.SubItems.Add(listviewresults[3].Replace("#commma#", ","));
+                    lvi.SubItems.Add(listviewresults[4].Replace("#commma#", ","));
+                    lvi.SubItems.Add(listviewresults[5].Replace("#commma#", ","));
                 }
                 //ファイルを閉じる
                 streamReader.Close();
             }
-          
+           
+            id_box.Text = "";
+            name_box.Text = "";
+            age_box.Text = "";
+            sex_box.Text = "";
+            affiliation_box.Text = "";
+            comment_box.Text = "";
+
         }
     }
 }
+
