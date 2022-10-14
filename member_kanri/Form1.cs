@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-
+using System.Configuration;
 
 namespace member_kanri
 {
@@ -114,99 +114,64 @@ namespace member_kanri
             
         }
 
-        //出力ぼたん
-        private void output_button_Click(object sender, EventArgs e)
+        //とりこみ（起動時にCSVから表示）
+        private void Form1_Load(object sender, EventArgs e)
         {
             
-            //SaveFileDialogの定義
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Title = "ファイルを保存する";
-            //フォルダの場所の指定（用意してるだけだから変えていい）
-            saveFileDialog.InitialDirectory = @"C:\Users\afuru\OneDrive\ドキュメント\";
-            //ファイル名をoutputで用意してあげてる（変えていい）
-            saveFileDialog.FileName = @"output.csv";
-            //ダイアログのひょうじ
-            saveFileDialog.ShowDialog();
-            //OKおしたとき
-            if (DialogResult != DialogResult.OK)
+            //ファイルパスの指定
+            string path = ConfigurationManager.AppSettings["CSVfilePath"];
+            //streamReaderの定義（ファイル開けるようにしてる）
+            StreamReader streamReader = new StreamReader(path);
+            Console.WriteLine(path);
+           //ファイルに文字があるだけループする
+            while (streamReader.Peek() != -1)
             {
-                //steamwriterという型のswという変数に、()のなかでファイルの場所と名前を指定したものを代入
-                //（）のなかはダイアログで指定したファイルのこと↓
-                StreamWriter sw = new StreamWriter(saveFileDialog.FileName);
-                
-                for (int i = 0; i < listView1.Items.Count; i++)
-                {
-                    //リストビューのアイテムをカンマ区切りに並べたものをＳに代入
-                    //文字列の、は#comma#に置き換え
-                    string s =
-                         (listView1.Items[i].SubItems[0].Text).Replace(",", "#commma#") +
-                         "," +
-                         (listView1.Items[i].SubItems[1].Text).Replace(",", "#commma#") +
-                         "," +
-                         (listView1.Items[i].SubItems[2].Text).Replace(",", "#commma#") +
-                         "," +
-                         (listView1.Items[i].SubItems[3].Text).Replace(",", "#commma#") +
-                         "," +
-                         (listView1.Items[i].SubItems[4].Text).Replace(",", "#commma#") +
-                         "," +
-                         (listView1.Items[i].SubItems[5].Text).Replace(",", "#commma#");
-                    //swのなかにｓを１行ずつ書き込んで保存する
-                    sw.WriteLine(s);
-                }
-                //ファイルをとじる
-                sw.Close();
+                //よみこむ
+                string result = streamReader.ReadLine();
+                //読み込んだものをスプリットで配列にする
+                string[] listviewresults = result.Split(',');
+                //配列にしたものをリストビューに入れる
+                ListViewItem lvi = listView1.Items.Add(listviewresults[0].Replace("#commma#", ","));
+                lvi.SubItems.Add(listviewresults[1].Replace("#commma#", ","));
+                lvi.SubItems.Add(listviewresults[2].Replace("#commma#", ","));
+                lvi.SubItems.Add(listviewresults[3].Replace("#commma#", ","));
+                lvi.SubItems.Add(listviewresults[4].Replace("#commma#", ","));
+                lvi.SubItems.Add(listviewresults[5].Replace("#commma#", ","));
             }
-            id_box.Text = "";
-            name_box.Text = "";
-            age_box.Text = "";
-            sex_box.Text = "";
-            affiliation_box.Text = "";
-            comment_box.Text = "";
+            //ファイルを閉じる
+            streamReader.Close();
         }
-        //とりこみぼたん
-        private void button1_Click(object sender, EventArgs e)
+
+       //閉じたときにCSVに保存
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
+            //ファイルパスの指定
+            string path = ConfigurationManager.AppSettings["CSVfilePath"];
+            //steamwriterという型のswという変数に、()のなかでファイルの場所と名前を指定したものを代入
+            //（）のなかはダイアログで指定したファイルのこと↓
+            StreamWriter sw = new StreamWriter(path);
 
-
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Title = "ファイルを選択する";
-            openFileDialog.InitialDirectory = "";
-            openFileDialog.ShowDialog();
-
-
-            //ファイルを選択、OKおしたとき
-            if (DialogResult != DialogResult.OK)
+            for (int i = 0; i < listView1.Items.Count; i++)
             {
-                //streamReaderの定義（ファイル開けるようにしてる）
-                StreamReader streamReader = new StreamReader(openFileDialog.FileName);
-                //ファイルに文字があるだけループする
-                while (streamReader.Peek() != -1)
-                {
-                    //よみこむ
-                    string result = streamReader.ReadLine();
-
-                    //読み込んだものをスプリットで配列にする
-                    string[] listviewresults = result.Split(',');
-
-                    //配列にしたものをリストビューに入れる
-                    ListViewItem lvi = listView1.Items.Add(listviewresults[0].Replace("#commma#", ","));
-                    lvi.SubItems.Add(listviewresults[1].Replace("#commma#", ","));
-                    lvi.SubItems.Add(listviewresults[2].Replace("#commma#", ","));
-                    lvi.SubItems.Add(listviewresults[3].Replace("#commma#", ","));
-                    lvi.SubItems.Add(listviewresults[4].Replace("#commma#", ","));
-                    lvi.SubItems.Add(listviewresults[5].Replace("#commma#", ","));
-                }
-                //ファイルを閉じる
-                streamReader.Close();
+                //リストビューのアイテムをカンマ区切りに並べたものをＳに代入
+                //文字列の、は#comma#に置き換え
+                string s =
+                     (listView1.Items[i].SubItems[0].Text).Replace(",", "#commma#") +
+                     "," +
+                     (listView1.Items[i].SubItems[1].Text).Replace(",", "#commma#") +
+                     "," +
+                     (listView1.Items[i].SubItems[2].Text).Replace(",", "#commma#") +
+                     "," +
+                     (listView1.Items[i].SubItems[3].Text).Replace(",", "#commma#") +
+                     "," +
+                     (listView1.Items[i].SubItems[4].Text).Replace(",", "#commma#") +
+                     "," +
+                     (listView1.Items[i].SubItems[5].Text).Replace(",", "#commma#");
+                //swのなかにｓを１行ずつ書き込んで保存する
+                sw.WriteLine(s);
             }
-           
-            id_box.Text = "";
-            name_box.Text = "";
-            age_box.Text = "";
-            sex_box.Text = "";
-            affiliation_box.Text = "";
-            comment_box.Text = "";
-
+            //ファイルをとじる
+            sw.Close();
         }
     }
 }

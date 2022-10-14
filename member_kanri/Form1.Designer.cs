@@ -51,8 +51,6 @@
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.output_button = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.age_box)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,7 +61,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label2.Location = new System.Drawing.Point(123, 213);
+            this.label2.Location = new System.Drawing.Point(123, 208);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(75, 30);
@@ -77,7 +75,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label3.Location = new System.Drawing.Point(123, 125);
+            this.label3.Location = new System.Drawing.Point(126, 120);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(75, 30);
@@ -91,7 +89,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label4.Location = new System.Drawing.Point(123, 169);
+            this.label4.Location = new System.Drawing.Point(126, 164);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(75, 30);
@@ -177,7 +175,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.Location = new System.Drawing.Point(121, 80);
+            this.label1.Location = new System.Drawing.Point(126, 74);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 30);
             this.label1.TabIndex = 14;
@@ -187,7 +185,7 @@
             // 
             this.lable.AutoSize = true;
             this.lable.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lable.Location = new System.Drawing.Point(93, 33);
+            this.lable.Location = new System.Drawing.Point(98, 27);
             this.lable.Name = "lable";
             this.lable.Size = new System.Drawing.Size(103, 30);
             this.lable.TabIndex = 17;
@@ -295,38 +293,12 @@
             this.columnHeader13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader13.Width = 130;
             // 
-            // output_button
-            // 
-            this.output_button.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.output_button.ForeColor = System.Drawing.Color.DarkCyan;
-            this.output_button.Location = new System.Drawing.Point(167, 698);
-            this.output_button.Name = "output_button";
-            this.output_button.Size = new System.Drawing.Size(118, 39);
-            this.output_button.TabIndex = 23;
-            this.output_button.Text = "出力";
-            this.output_button.UseVisualStyleBackColor = true;
-            this.output_button.Click += new System.EventHandler(this.output_button_Click);
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button1.ForeColor = System.Drawing.Color.DarkCyan;
-            this.button1.Location = new System.Drawing.Point(291, 698);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(118, 40);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "取り込み";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Teal;
             this.ClientSize = new System.Drawing.Size(744, 764);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.output_button);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.affiliation_box);
             this.Controls.Add(this.age_box);
@@ -348,6 +320,8 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.age_box)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -378,8 +352,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader11;
         private System.Windows.Forms.ColumnHeader columnHeader12;
         private System.Windows.Forms.ColumnHeader columnHeader13;
-        private System.Windows.Forms.Button output_button;
-        private System.Windows.Forms.Button button1;
     }
 }
 
