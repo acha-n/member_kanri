@@ -41,19 +41,26 @@ namespace member_kanri
                     // SELECT文の実行
                     using (var reader = command.ExecuteReader())
                     {
-                        // 1行ずつ読み取ってコンソールに表示
+                        // 1行ずつ読み取ってlistviewに表示
                         while (reader.Read())
                         {
-                            Console.WriteLine($"ID:{reader["ID"]} 名前:{reader["NAME"]}　年齢:{reader["AGE"]}　性別:{reader["SEX"]} 所属:{reader["PART"]}　コメント:{reader["COMMENT"]}");
-                            
+                            //Console.WriteLine($"ID:{reader["ID"]} 名前:{reader["NAME"]}　年齢:{reader["AGE"]}　性別:{reader["SEX"]} 所属:{reader["PART"]}　コメント:{reader["COMMENT"]}");
+                            ListViewItem lvi = listView1.Items.Add(reader["ID"].ToString());
+                            lvi.SubItems.Add(reader["NAME"].ToString());
+                            lvi.SubItems.Add(reader["AGE"].ToString());
+                            lvi.SubItems.Add(reader["SEX"].ToString());
+                            lvi.SubItems.Add(reader["PART"].ToString());
+                            lvi.SubItems.Add(reader["COMMENT"].ToString());
                         }
                     }
                 }
+
             }
             catch (MySqlException me)
             {
                 Console.WriteLine("ERROR: " + me.Message);
             }
+
         }
 
 
@@ -79,6 +86,7 @@ namespace member_kanri
                         target.SubItems[1].Text = name_box.Text;
                         target.SubItems[2].Text = age_box.Text;
                         target.SubItems[3].Text = sex_box.Text;
+
                         target.SubItems[4].Text = affiliation_box.Text;
                         target.SubItems[5].Text = comment_box.Text;
                      }
