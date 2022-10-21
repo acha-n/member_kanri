@@ -206,6 +206,9 @@
             this.sex_box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.sex_box.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.sex_box.FormattingEnabled = true;
+            this.sex_box.Items.AddRange(new object[] {
+            "男",
+            "女"});
             this.sex_box.Location = new System.Drawing.Point(205, 161);
             this.sex_box.Name = "sex_box";
             this.sex_box.Size = new System.Drawing.Size(131, 38);
@@ -224,13 +227,9 @@
             this.affiliation_box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.affiliation_box.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.affiliation_box.FormattingEnabled = true;
-            this.affiliation_box.Items.AddRange(new object[] {
-            "営業部",
-            "人事部",
-            "開発部"});
             this.affiliation_box.Location = new System.Drawing.Point(205, 205);
             this.affiliation_box.Name = "affiliation_box";
-            this.affiliation_box.Size = new System.Drawing.Size(134, 38);
+            this.affiliation_box.Size = new System.Drawing.Size(395, 38);
             this.affiliation_box.TabIndex = 21;
             // 
             // listView1
@@ -244,11 +243,11 @@
             this.columnHeader13});
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(98, 464);
+            this.listView1.Location = new System.Drawing.Point(10, 464);
             this.listView1.Margin = new System.Windows.Forms.Padding(1);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(567, 217);
+            this.listView1.Size = new System.Drawing.Size(724, 217);
             this.listView1.TabIndex = 22;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -318,7 +317,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
-            this.Load += new System.EventHandler(this.Form1_Load);
+           // this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.age_box)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

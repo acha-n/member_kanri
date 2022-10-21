@@ -14,10 +14,15 @@ using MySql.Data.MySqlClient;
 
 
 namespace member_kanri
-{ 
+{
+
+
 
     public partial class Form1 : Form
     {
+
+        List<String> partManage = new List<string>();
+
         public Form1()
         {
             InitializeComponent();
@@ -28,46 +33,87 @@ namespace member_kanri
             string pass = "kanoko20sai";
             string charset = "utf8";
             string connectionString = string.Format("Server={0};Database={1};Uid={2};Pwd={3};Charset={4}", server, database, user, pass, charset);
-            try
-            {                  
-                // MySQLへの接続
-                var sql = "SELECT * FROM USERINFO";
-                // 接続・SQL実行に必要なインスタンスを生成
-                using (var connection = new MySqlConnection(connectionString))
-                using (var command = new MySqlCommand(sql, connection)) 
-                {
-                    // 接続開始
-                    connection.Open();
-                    // SELECT文の実行
-                    using (var reader = command.ExecuteReader())
-                    {
-                        // 1行ずつ読み取ってlistviewに表示
-                        while (reader.Read())
-                        {
-                            //Console.WriteLine($"ID:{reader["ID"]} 名前:{reader["NAME"]}　年齢:{reader["AGE"]}　性別:{reader["SEX"]} 所属:{reader["PART"]}　コメント:{reader["COMMENT"]}");
-                            ListViewItem lvi = listView1.Items.Add(reader["ID"].ToString());
-                            lvi.SubItems.Add(reader["NAME"].ToString());
-                            lvi.SubItems.Add(reader["AGE"].ToString());
-                            lvi.SubItems.Add(reader["SEX"].ToString());
-                            lvi.SubItems.Add(reader["PART"].ToString());
-                            lvi.SubItems.Add(reader["COMMENT"].ToString());
-                        }
-                    }
-                }
 
+            // MySQLへの接続
+            var userinfo = "SELECT ID,NAME,AGE, SEX, (SELECT NAME FROM PARTINFO WHERE ID=KEKKA.PART ) AS PARTNAME ,COMMENT FROM USERINFO  KEKKA";
+            var partinfo = "SELECT * FROM PARTINFO";
+
+            var connection = new MySqlConnection(connectionString);
+
+            
+            // 接続・SQL実行に必要なインスタンスを生成
+            var userinfocommand = new MySqlCommand(userinfo, connection);
+            var partinfocommand = new MySqlCommand(partinfo, connection);
+            {
+                 // 接続開始
+                 connection.Open();
+                //所属のみもってきて所属ボックスへ
+                var partreader = partinfocommand.ExecuteReader();
+                 {
+                     while (partreader.Read())
+                     {
+                         affiliation_box.Items.Add(partreader["NAME"].ToString());
+                         partManage.Add(partreader["ID"].ToString());
+                     }
+                 }
+
+                 // SELECT文の実行
+                 var userreader = userinfocommand.ExecuteReader();
+                 {
+                      // 1行ずつ読み取ってlistviewに表示
+                      while (userreader.Read())
+                      {
+                         //性別　1なら男2なら女
+                         if (userreader["SEX"].ToString() == "1")
+                         {
+                            ListViewItem lvi = listView1.Items.Add(userreader["ID"].ToString());
+                             lvi.SubItems.Add(userreader["NAME"].ToString());
+                             lvi.SubItems.Add(userreader["AGE"].ToString());
+                             lvi.SubItems.Add("男");
+                             lvi.SubItems.Add(userreader["PARTNAME"].ToString());
+                             lvi.SubItems.Add(userreader["COMMENT"].ToString());
+                             //Console.WriteLine("男");
+                         }
+                         else
+                         {
+                             ListViewItem lvi = listView1.Items.Add(userreader["ID"].ToString());
+                             lvi.SubItems.Add(userreader["NAME"].ToString());
+                             lvi.SubItems.Add(userreader["AGE"].ToString());
+                             lvi.SubItems.Add("女");
+                             lvi.SubItems.Add(userreader["PARTNAME"].ToString());
+                             lvi.SubItems.Add(userreader["COMMENT"].ToString());
+                             //Console.WriteLine("女");
+                         }
+                            //Console.WriteLine($"ID:{reader["ID"]} 名前:{reader["NAME"]}　年齢:{reader["AGE"]}　性別:{reader["SEX"]} 所属:{reader["PART"]}　コメント:{reader["COMMENT"]}");
+                           /*ListViewItem lvi = listView1.Items.Add(userreader["ID"].ToString());
+                             lvi.SubItems.Add(userreader["NAME"].ToString());
+                             lvi.SubItems.Add(userreader["AGE"].ToString());
+                             lvi.SubItems.Add(userreader["SEX"].ToString());
+                             lvi.SubItems.Add(userreader["PARTNAME"].ToString());
+                             lvi.SubItems.Add(userreader["COMMENT"].ToString());         */             
+                      }
+                }
             }
-            catch (MySqlException me)
+
+            /*var updatacommand = new MySqlCommand(userinfo, connection);
+            {            
+               connection.Open();
+                
+            }
+            */
+        }
+            /*catch (MySqlException me)
             {
                 Console.WriteLine("ERROR: " + me.Message);
             }
-
-        }
-
-
+*/
+           
+        
 
         //追加、更新
         private void addition_button_Click(object sender, EventArgs e)
         {
+
             for (int i = 0; i < listView1.Items.Count; i++)
             {
                 //リストボックスの中の行の集まりの中の［i］行目(1人分) 
@@ -86,7 +132,6 @@ namespace member_kanri
                         target.SubItems[1].Text = name_box.Text;
                         target.SubItems[2].Text = age_box.Text;
                         target.SubItems[3].Text = sex_box.Text;
-
                         target.SubItems[4].Text = affiliation_box.Text;
                         target.SubItems[5].Text = comment_box.Text;
                      }
@@ -159,10 +204,10 @@ namespace member_kanri
             
         }
 
-        //とりこみ（起動時にCSVから表示）
-        private void Form1_Load(object sender, EventArgs e)
+        //とりこみ（起動時にDBから表示）
+       /* private void Form1_Load(object sender, EventArgs e)
         {
-            
+          
             //ファイルパスの指定
             string path = ConfigurationManager.AppSettings["CSVfilePath"];
             //streamReaderの定義（ファイル開けるようにしてる）
@@ -175,16 +220,16 @@ namespace member_kanri
                 //読み込んだものをスプリットで配列にする
                 string[] listviewresults = result.Split(',');
                 //配列にしたものをリストビューに入れる
-                ListViewItem lvi = listView1.Items.Add(listviewresults[0].Replace("#commma#", ","));
+                *//* ListViewItem lvi = listView1.Items.Add(listviewresults[0].Replace("#commma#", ","));
                 lvi.SubItems.Add(listviewresults[1].Replace("#commma#", ","));
                 lvi.SubItems.Add(listviewresults[2].Replace("#commma#", ","));
                 lvi.SubItems.Add(listviewresults[3].Replace("#commma#", ","));
                 lvi.SubItems.Add(listviewresults[4].Replace("#commma#", ","));
-                lvi.SubItems.Add(listviewresults[5].Replace("#commma#", ","));
+                lvi.SubItems.Add(listviewresults[5].Replace("#commma#", ","));*//*
             }
             //ファイルを閉じる
             streamReader.Close();
-        }
+        }*/
 
        //閉じたときにCSVに保存
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
