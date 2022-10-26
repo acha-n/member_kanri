@@ -154,7 +154,7 @@
             this.addition_button.Name = "addition_button";
             this.addition_button.Size = new System.Drawing.Size(118, 39);
             this.addition_button.TabIndex = 7;
-            this.addition_button.Text = "追加/更新";
+            this.addition_button.Text = "追加・更新";
             this.addition_button.UseVisualStyleBackColor = true;
             this.addition_button.Click += new System.EventHandler(this.addition_button_Click);
             // 
@@ -317,7 +317,6 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
-           // this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.age_box)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
