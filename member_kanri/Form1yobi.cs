@@ -21,7 +21,10 @@ namespace member_kanri
     public partial class Form1 : Form
     {
 
+
         List<String> partManage = new List<string>();
+        Dictionary<string, string> partInfo = new Dictionary<string, string>();
+
 
         public Form1()
         {
@@ -40,7 +43,7 @@ namespace member_kanri
 
             // MySQLでやりたいSQL文
             var userinfo = "SELECT ID,NAME,AGE, SEX, (SELECT NAME FROM PARTINFO WHERE ID=KEKKA.PART ) " +
-                           "AS PARTNAME ,COMMENT FROM USERINFO  KEKKA ";
+                           "AS PARTNAME ,COMMENT FROM USERINFO  KEKKA ORDER BY CAST(ID AS SIGNED)";
             var partinfo = "SELECT * FROM PARTINFO";
 
 
@@ -124,8 +127,6 @@ namespace member_kanri
             var connection = new MySqlConnection(connectionString);
 
 
-            //listviewのアイテムをDBへ更新
-            connection.Open();
 
             for (int i = 0; i < listView1.Items.Count; i++)
             {
@@ -147,7 +148,65 @@ namespace member_kanri
                         target.SubItems[3].Text = sex_box.Text;
                         target.SubItems[4].Text = affiliation_box.Text;
                         target.SubItems[5].Text = comment_box.Text;
-                        //更新と追加のSQL文準備
+
+
+                         var userupdate = "UPDATE USERINFO SET ID=@id,NAME=@name,AGE=@age,SEX=@sex,PART=@part,COMMENT=@comment WHERE ID=@id";
+
+                        var ID_UPDATE = listView1.Items[i].Text;
+                        var NAME_UPDATE = listView1.Items[i].SubItems[1].Text;
+                        var AGE_UPDATE = listView1.Items[i].SubItems[2].Text;
+                        var SEX_UPDATE = listView1.Items[i].SubItems[3].Text;
+                        //性別を戻す
+                        if (sex_box.Text == "男")
+                        {
+                            SEX_UPDATE = "1";
+                        }
+                        else
+                        {
+                            SEX_UPDATE = "2";
+                        }
+                     
+                        var PART_UPDATE = listView1.Items[i].SubItems[4].Text;
+
+                        var partupdate = new Dictionary<string, string>();
+                        partupdate.Add("0", "阪神タイガース");
+                        partupdate.Add("1", "読売ジャイアンツ");
+                        partupdate.Add("2", "中日ドラゴンズ");
+                        partupdate.Add("3", "横浜DeNAベイスターズ");
+                        partupdate.Add("4", "広島東洋カープ");
+                        partupdate.Add("5", "東京ヤクルトスワローズ");
+                        partupdate.Add("6", "オリックス・バファローズ");
+                        partupdate.Add("7", "福岡ソフトバンクホークス");
+                        partupdate.Add("8", "千葉ロッテマリーンズ");
+                        partupdate.Add("9", "埼玉西武ライオンズ");
+
+
+                        foreach (KeyValuePair<string, string> kvp in partupdate)
+                        {
+                            if (affiliation_box.Text == kvp.Value)
+                            {
+                                PART_UPDATE = kvp.Key;
+                            }
+
+                        }
+
+                        var COMMENT_UPDATE = listView1.Items[i].SubItems[5].Text;
+
+                        var updatecommand = new MySqlCommand(userupdate, connection);
+
+                        //listviewのアイテムをDBへ更新
+                        connection.Open();
+                        updatecommand.Parameters.AddWithValue("@id", ID_UPDATE);
+                        updatecommand.Parameters.AddWithValue("@name", NAME_UPDATE);
+                        updatecommand.Parameters.AddWithValue("@age", AGE_UPDATE);
+                        updatecommand.Parameters.AddWithValue("@sex", SEX_UPDATE);
+                        updatecommand.Parameters.AddWithValue("@part", PART_UPDATE);
+                        updatecommand.Parameters.AddWithValue("@comment", COMMENT_UPDATE);
+
+                        updatecommand.ExecuteNonQuery();
+
+                        connection.Close();
+                        /*//更新と追加のSQL文準備
                         var userupdate =
                         "UPDATE USERINFO SET " +
                         "ID='" + listView1.Items[i].Text + "'," +
@@ -155,14 +214,12 @@ namespace member_kanri
                         "AGE='" + listView1.Items[i].SubItems[2].Text + "'," +
                         "SEX='" + listView1.Items[i].SubItems[3].Text + "'," +
                         "PART='" + listView1.Items[i].SubItems[4].Text + "'," +
-                        "COMMENT='" + listView1.Items[i].SubItems[5].Text + "'," +
-                        "WHERE ID='" + listView1.Items[i].Text + "'";
-
-                        var updatecommand = new MySqlCommand(userupdate, connection);
+                        "COMMENT='" + listView1.Items[i].SubItems[5].Text + "'" +
+                        "WHERE ID ='" + listView1.Items[i].Text + "'";*/
                     }
                     return;
                 }
-
+            }
 
                 //↑じゃない場合、テキストボックスの中身を空白いれてリストボックスに追加
                 // listView1.Items.Add(id_box.Text).SubItems.Add(name_box.Text);
@@ -173,17 +230,72 @@ namespace member_kanri
                 lvi.SubItems.Add(affiliation_box.Text);
                 lvi.SubItems.Add(comment_box.Text);
 
-                var userinsert =
-                    "INSERT INTO USERINFO (ID, NAME, AGE, SEX, PART, COMMENT) VALUES " +
-                    "'" + listView1.Items[i].Text + "'," +
-                    "'" + listView1.Items[i].SubItems[1].Text + "'," +
-                    "'" + listView1.Items[i].SubItems[2].Text + "'," +
-                    "'" + listView1.Items[i].SubItems[3].Text + "'," +
-                    "'" + listView1.Items[i].SubItems[4].Text + "'," +
-                    "'" + listView1.Items[i].SubItems[5].Text + "'";
-                var insertcommand = new MySqlCommand(userinsert, connection);
-                connection.Close();
+            var userinsert =
+             "INSERT INTO USERINFO (ID, NAME, AGE, SEX, PART, COMMENT) VALUES " +
+             "(@id,@name,@age,@sex,@part,@comment)";
+
+            var ID_INSERT = id_box.Text;
+            var NAME_INSERT = name_box.Text;
+            var AGE_INSERT = age_box.Text;
+            var SEX_INSERT = sex_box.Text;
+            //性別を戻す
+            if (sex_box.Text == "男")
+            {
+                SEX_INSERT = "1";
             }
+            else
+            {
+                SEX_INSERT = "2";
+            }
+
+            var PART_INSERT = affiliation_box.Text;
+            /*if (affiliation_box.Text == "阪神タイガース" ) {
+                PART = "1";
+            }
+*/
+            var partinsert = new Dictionary<string, string>();
+            partinsert.Add("0", "阪神タイガース");
+            partinsert.Add("1", "読売ジャイアンツ");
+            partinsert.Add("2", "中日ドラゴンズ");
+            partinsert.Add("3", "横浜DeNAベイスターズ");
+            partinsert.Add("4", "広島東洋カープ");
+            partinsert.Add("5", "東京ヤクルトスワローズ");
+            partinsert.Add("6", "オリックス・バファローズ");
+            partinsert.Add("7", "福岡ソフトバンクホークス");
+            partinsert.Add("8", "千葉ロッテマリーンズ");
+            partinsert.Add("9", "埼玉西武ライオンズ");
+
+
+            foreach (KeyValuePair<string, string> kvp in partinsert)
+            {
+                if (affiliation_box.Text == kvp.Value)
+                {
+                    PART_INSERT = kvp.Key;
+                }
+               
+            }
+            var COMMENT_INSERT = comment_box.Text;
+
+            var insertcommand = new MySqlCommand(userinsert, connection);
+            connection.Open();
+
+            insertcommand.Parameters.AddWithValue("@id", ID_INSERT);
+            insertcommand.Parameters.AddWithValue("@name", NAME_INSERT);
+            insertcommand.Parameters.AddWithValue("@age", AGE_INSERT);
+            insertcommand.Parameters.AddWithValue("@sex", SEX_INSERT);
+            insertcommand.Parameters.AddWithValue("@part", PART_INSERT);
+            insertcommand.Parameters.AddWithValue("@comment", COMMENT_INSERT);
+
+            insertcommand.ExecuteNonQuery();
+
+            connection.Close();
+            /*" +
+            "ID= '" + id_box.Text + "'," +
+            "NAME= '" + name_box.Text + "'," +
+            "AGE= '" + age_box.Text + "'," +
+            "SEX= '" + sex_box.Text + "'," +
+            "PART= '" + affiliation_box.Text + "'," +
+            "COMMENT= '" + comment_box.Text + "')";*/
         }
 
 
@@ -200,15 +312,17 @@ namespace member_kanri
             string connectionString = string.Format("Server={0};Database={1};Uid={2};Pwd={3};Charset={4}", server, database, user, pass, charset);
             var connection = new MySqlConnection(connectionString);
             //listviewのアイテムをDBへ更新
-            connection.Open();
 
             //もし選択されたら、選択されたものを消す
             if (listView1.SelectedItems.Count > 0)
             {
-                listView1.Items.Remove(listView1.SelectedItems[0]);
-
-                var userdelete = $"DELETE FROM USERINFO WHERE listView1.SelectedItems[0] ";
+                var userdelete = "DELETE FROM USERINFO WHERE ID=@id" ;
                 var deletecommand = new MySqlCommand(userdelete, connection);
+                connection.Open();
+                deletecommand.Parameters.AddWithValue("@id", listView1.SelectedItems[0].Text);
+                deletecommand.ExecuteNonQuery();
+                connection.Close();
+                listView1.Items.Remove(listView1.SelectedItems[0]);
             }
             //選択されなかったらメッセージボックスを出す
             else
@@ -317,6 +431,7 @@ namespace member_kanri
             //ファイルをとじる
             sw.Close();
         }
+        
     }
 }
     
