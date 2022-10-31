@@ -51,6 +51,7 @@
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.part_additionbutton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.age_box)).BeginInit();
             this.SuspendLayout();
             // 
@@ -243,11 +244,11 @@
             this.columnHeader13});
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(10, 464);
+            this.listView1.Location = new System.Drawing.Point(10, 474);
             this.listView1.Margin = new System.Windows.Forms.Padding(1);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(724, 217);
+            this.listView1.Size = new System.Drawing.Size(724, 211);
             this.listView1.TabIndex = 22;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -289,12 +290,25 @@
             this.columnHeader13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader13.Width = 130;
             // 
+            // part_additionbutton
+            // 
+            this.part_additionbutton.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.part_additionbutton.ForeColor = System.Drawing.Color.Teal;
+            this.part_additionbutton.Location = new System.Drawing.Point(617, 205);
+            this.part_additionbutton.Name = "part_additionbutton";
+            this.part_additionbutton.Size = new System.Drawing.Size(77, 38);
+            this.part_additionbutton.TabIndex = 23;
+            this.part_additionbutton.Text = "編集";
+            this.part_additionbutton.UseVisualStyleBackColor = true;
+            this.part_additionbutton.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Teal;
             this.ClientSize = new System.Drawing.Size(744, 764);
+            this.Controls.Add(this.part_additionbutton);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.affiliation_box);
             this.Controls.Add(this.age_box);
@@ -347,6 +361,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader11;
         private System.Windows.Forms.ColumnHeader columnHeader12;
         private System.Windows.Forms.ColumnHeader columnHeader13;
+        private System.Windows.Forms.Button part_additionbutton;
     }
 }
 
