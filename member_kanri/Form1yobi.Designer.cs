@@ -52,6 +52,7 @@
             this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.part_additionbutton = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.age_box)).BeginInit();
             this.SuspendLayout();
             // 
@@ -135,9 +136,10 @@
             // 
             // close_button
             // 
+            this.close_button.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.close_button.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.close_button.ForeColor = System.Drawing.Color.Teal;
-            this.close_button.Location = new System.Drawing.Point(455, 700);
+            this.close_button.Location = new System.Drawing.Point(576, 700);
             this.close_button.Margin = new System.Windows.Forms.Padding(4);
             this.close_button.Name = "close_button";
             this.close_button.Size = new System.Drawing.Size(118, 39);
@@ -148,9 +150,10 @@
             // 
             // addition_button
             // 
+            this.addition_button.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.addition_button.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.addition_button.ForeColor = System.Drawing.Color.Teal;
-            this.addition_button.Location = new System.Drawing.Point(171, 700);
+            this.addition_button.Location = new System.Drawing.Point(119, 700);
             this.addition_button.Margin = new System.Windows.Forms.Padding(4);
             this.addition_button.Name = "addition_button";
             this.addition_button.Size = new System.Drawing.Size(118, 39);
@@ -161,9 +164,10 @@
             // 
             // delete_button
             // 
+            this.delete_button.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.delete_button.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.delete_button.ForeColor = System.Drawing.Color.Teal;
-            this.delete_button.Location = new System.Drawing.Point(314, 700);
+            this.delete_button.Location = new System.Drawing.Point(391, 700);
             this.delete_button.Margin = new System.Windows.Forms.Padding(4);
             this.delete_button.Name = "delete_button";
             this.delete_button.Size = new System.Drawing.Size(118, 39);
@@ -232,9 +236,13 @@
             this.affiliation_box.Name = "affiliation_box";
             this.affiliation_box.Size = new System.Drawing.Size(395, 38);
             this.affiliation_box.TabIndex = 21;
+           // this.affiliation_box.SelectedIndexChanged += new System.EventHandler(this.affiliation_box_SelectedIndexChanged);
             // 
             // listView1
             // 
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader8,
             this.columnHeader9,
@@ -302,12 +310,26 @@
             this.part_additionbutton.UseVisualStyleBackColor = true;
             this.part_additionbutton.Click += new System.EventHandler(this.button1_Click);
             // 
+            // button2
+            // 
+            this.button2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.button2.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button2.ForeColor = System.Drawing.Color.Teal;
+            this.button2.Location = new System.Drawing.Point(255, 700);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(118, 39);
+            this.button2.TabIndex = 25;
+            this.button2.Text = "再読み込み";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Teal;
             this.ClientSize = new System.Drawing.Size(744, 764);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.part_additionbutton);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.affiliation_box);
@@ -362,6 +384,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader12;
         private System.Windows.Forms.ColumnHeader columnHeader13;
         private System.Windows.Forms.Button part_additionbutton;
+        private System.Windows.Forms.Button button2;
     }
 }
 

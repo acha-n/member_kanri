@@ -33,7 +33,7 @@ namespace member_kanri
             var loadConnection = new MySqlConnection(connectionString);
 
             //削除フラグが立ってないものだけ表示
-            var partInfo = "SELECT ID,NAME FROM PARTINFO  WHERE DELETE_FLG =0 ORDER BY CAST(ID AS SIGNED)";
+            var partInfo = "SELECT ID,NAME FROM PARTINFO WHERE DELETE_FLG =0 ORDER BY CAST(ID AS SIGNED)";
             var partCommand = new MySqlCommand(partInfo, loadConnection);
             loadConnection.Open();
             var partReader = partCommand.ExecuteReader();
@@ -43,7 +43,6 @@ namespace member_kanri
                 {   
                     //IDとNAMEを空白区切りで表示
                     listBox1.Items.Add(partReader["ID"].ToString() + " " + partReader["NAME"].ToString());
-
                 }
                 loadConnection.Close();
             }
@@ -162,6 +161,10 @@ namespace member_kanri
                 var DELETE_ID = splittext[0];
                
                 deleteCommand.Parameters.AddWithValue("@id", DELETE_ID);
+
+
+
+
                 deleteCommand.ExecuteNonQuery();
                 connection.Close();
 
