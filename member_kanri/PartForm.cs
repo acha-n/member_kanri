@@ -162,13 +162,10 @@ namespace member_kanri
                
                 deleteCommand.Parameters.AddWithValue("@id", DELETE_ID);
 
-
-
-
                 deleteCommand.ExecuteNonQuery();
                 connection.Close();
 
-                //リストビューから消す
+                //listboxから消す
                 if (listBox1.SelectedIndex != -1)
                 {
                     listBox1.Items.Remove(listBox1.Items[listBox1.SelectedIndex]);
