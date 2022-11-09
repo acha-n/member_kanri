@@ -73,7 +73,7 @@ namespace member_kanri
                     lvi.SubItems.Add(userReader["COMMENT"].ToString());
 
                     //コメントの後ろにPARTのIDがはいってる（見えない）
-                    lvi.SubItems.Add(userReader["PART"].ToString());                  
+                    lvi.SubItems.Add(userReader["PART"].ToString());
                 }
                 connection.Close();
             }
@@ -92,9 +92,9 @@ namespace member_kanri
                 {
                     listView1.Items[i].UseItemStyleForSubItems = false;
                     listView1.Items[i].SubItems[4].ForeColor = Color.Red;
-                }　
+                }
                 else
-                {                 
+                {
                 }
                 //whileが1回回るごとに1を追加（forと違ってiの値は増えない）
                 i++;
@@ -118,6 +118,8 @@ namespace member_kanri
             var connection = new MySqlConnection(connectionString);
             var partInfoCommand = new MySqlCommand(partInfo, connection);
 
+            //更新しているかどうかのフラグ（更新したらtrue、falseなら更新できない）
+            bool isDone = false;
             for (var i = 0; i < listView1.Items.Count; i++)
             {
                 //リストボックスの中の行の集まりの中の［i］行目(1人分) 
@@ -135,17 +137,23 @@ namespace member_kanri
 
                     while (editReader.Read())
                     {
-                        if ((listView1.Items[i].SubItems[1].Text != editReader["NAME"].ToString()) |
-                            (listView1.Items[i].SubItems[2].Text != editReader["AGE"].ToString()) | (listView1.Items[i].SubItems[3].Text != editReader["SEX"].ToString()) |
-                            (listView1.Items[i].SubItems[4].Text != editReader["PARTNAME"].ToString()) | (listView1.Items[i].SubItems[5].Text != editReader["COMMENT"].ToString()))
+                        if (listView1.Items[i].Text == editReader["ID"].ToString() && 
+                            (listView1.Items[i].SubItems[1].Text != editReader["NAME"].ToString() ||
+                            listView1.Items[i].SubItems[2].Text != editReader["AGE"].ToString() ||
+                            listView1.Items[i].SubItems[3].Text != editReader["SEX"].ToString() ||
+                            listView1.Items[i].SubItems[4].Text != editReader["PARTNAME"].ToString() ||
+                            listView1.Items[i].SubItems[5].Text != editReader["COMMENT"].ToString()))
                         {
                             MessageBox.Show("再読み込みしてください", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
-                        else if ((listView1.Items[i].SubItems[1].Text == editReader["NAME"].ToString()) &
-                            (listView1.Items[i].SubItems[2].Text == editReader["AGE"].ToString()) & (listView1.Items[i].SubItems[3].Text == editReader["SEX"].ToString()) &
-                            (listView1.Items[i].SubItems[4].Text == editReader["PARTNAME"].ToString()) & (listView1.Items[i].SubItems[4].Text == editReader["COMMENT"].ToString()))
+                        else if (listView1.Items[i].Text == editReader["ID"].ToString() &&
+                            (listView1.Items[i].SubItems[1].Text == editReader["NAME"].ToString() &&
+                            listView1.Items[i].SubItems[2].Text == editReader["AGE"].ToString() && 
+                            listView1.Items[i].SubItems[3].Text == editReader["SEX"].ToString() &&
+                            listView1.Items[i].SubItems[4].Text == editReader["PARTNAME"].ToString() &&
+                            listView1.Items[i].SubItems[5].Text == editReader["COMMENT"].ToString()))
                         {
-                            if (MessageBox.Show("上書きしますか", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            if(MessageBox.Show("上書きしますか", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 //UPDATE
                                 ListViewItem target = listView1.Items[i];
@@ -170,14 +178,15 @@ namespace member_kanri
                                     SEX_UPDATE = "2";
                                 }
                                 var PART_UPDATE = listView1.Items[i].SubItems[4].Text;
+                                var COMMENT_UPDATE = listView1.Items[i].SubItems[5].Text;
                                 connection.Open();
                                 //所属をIDでDBに入れる
                                 var partUpdate = new Dictionary<string, string>();
                                 var partInfoReader2 = partInfoCommand.ExecuteReader();
                                 /* //↓のPARTNAMEとIDを追加
-                               while (partInfoReader2.Read())
-                               {
-                                   partUpdate.Add(partInfoReader2["ID"].ToString(), partInfoReader2["NAME"].ToString());
+                                while (partInfoReader2.Read())
+                                {
+                                    partUpdate.Add(partInfoReader2["ID"].ToString(), partInfoReader2["NAME"].ToString());
                                 }*/
                                 foreach (KeyValuePair<string, string> kvp in partUpdate)
                                 {
@@ -210,7 +219,6 @@ namespace member_kanri
                                     i++;
                                 }
                                 connection.Close();
-                                var COMMENT_UPDATE = listView1.Items[i].SubItems[5].Text;
                                 var upDateCommand = new MySqlCommand(userUpdate, connection);
                                 //listviewのアイテムをDBへ更新
                                 connection.Open();
@@ -233,13 +241,15 @@ namespace member_kanri
                                 "COMMENT='" + listView1.Items[i].SubItems[5].Text + "'" +
                                 "WHERE ID ='" + listView1.Items[i].Text + "'";*/
                             }
-                        }                    
+                        }
+                        break;
                     }
+                    isDone = true;
                     editConnection.Close();
                 }
             }
-
-           
+            if (isDone == false)
+            {
                 // //idboxにはいってる値と同じ値をもつ行がないとき（リストボックスの中のiの情報のなかの[0]）(INSERT)
                 //↑じゃない場合、テキストボックスの中身を空白いれてリストボックスに追加
                 // listView1.Items.Add(id_box.Text).SubItems.Add(name_box.Text);
@@ -250,10 +260,9 @@ namespace member_kanri
                 lvi.SubItems.Add(affiliation_box.Text);
                 lvi.SubItems.Add(comment_box.Text);
 
-
                 var userInsert =
-                 "INSERT INTO USERINFO (ID, NAME, AGE, SEX, PART, COMMENT) VALUES " +
-                 "(@id,@name,@age,@sex,@part,@comment)";
+                    "INSERT INTO USERINFO (ID, NAME, AGE, SEX, PART, COMMENT) VALUES " +
+                    "(@id,@name,@age,@sex,@part,@comment)";
 
                 var ID_INSERT = id_box.Text;
                 var NAME_INSERT = name_box.Text;
@@ -270,11 +279,10 @@ namespace member_kanri
                 }
                 var PART_INSERT = affiliation_box.Text;
                 /*1こづついふかく
-                 * if (affiliation_box.Text == "阪神タイガース" ) {
+                    * if (affiliation_box.Text == "阪神タイガース" ) {
                     PART = "1";
                 }
     */
-
                 //dictionarｙつかう
                 var partInsert = new Dictionary<string, string>();
                 connection.Open();
@@ -285,14 +293,12 @@ namespace member_kanri
                 {
                     partInsert.Add(partInfoReader["ID"].ToString(), partInfoReader["NAME"].ToString());
                 }
-
                 foreach (KeyValuePair<string, string> kvp in partInsert)
                 {
                     if (affiliation_box.Text == kvp.Value)
                     {
                         PART_INSERT = kvp.Key;
                     }
-
                 }
                 connection.Close();
                 var COMMENT_INSERT = comment_box.Text;
@@ -308,7 +314,6 @@ namespace member_kanri
                 insertCommand.Parameters.AddWithValue("@comment", COMMENT_INSERT);
 
                 insertCommand.ExecuteNonQuery();
-
                 connection.Close();
                 /*" +
                 "ID= '" + id_box.Text + "'," +
@@ -317,9 +322,9 @@ namespace member_kanri
                 "SEX= '" + sex_box.Text + "'," +
                 "PART= '" + affiliation_box.Text + "'," +
                 "COMMENT= '" + comment_box.Text + "')";*/
-            
+            }
         }
-       
+
         //削除
         private void delete_button_Click(object sender, EventArgs e)
         {
@@ -331,24 +336,30 @@ namespace member_kanri
             string charset = "utf8";
             string connectionString = string.Format("Server={0};Database={1};Uid={2};Pwd={3};Charset={4}", server, database, user, pass, charset);
             var connection = new MySqlConnection(connectionString);
-            //listviewのアイテムをDBへ更新
 
-            //もし選択されたら、選択されたものを消す
+            //もし選択されたら、
             if (listView1.SelectedItems.Count > 0)
             {
-                var userdelete = "DELETE FROM USERINFO WHERE ID=@id" ;
+
+
+
+
+
+                //選択されたものをDBから消す
+                var userdelete = "DELETE FROM USERINFO WHERE ID=@id";
                 var deleteCommand = new MySqlCommand(userdelete, connection);
                 connection.Open();
                 deleteCommand.Parameters.AddWithValue("@id", listView1.SelectedItems[0].Text);
                 deleteCommand.ExecuteNonQuery();
                 connection.Close();
+                //listviewからけす
                 listView1.Items.Remove(listView1.SelectedItems[0]);
             }
             //選択されなかったらメッセージボックスを出す
-            else
+            else if(listView1.SelectedItems.Count > -1)
             {
                 MessageBox.Show("選択してください",
-                 "エラー", 
+                 "エラー",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             }
@@ -377,7 +388,6 @@ namespace member_kanri
             ListView listView = (ListView)sender;
             //listview.textをtextという変数にした
             ListView.SelectedListViewItemCollection item = listView.SelectedItems;
-
             //listviewのかうんとが０のとき
             if (listView.SelectedItems.Count > 0)
             {
@@ -386,13 +396,13 @@ namespace member_kanri
                 age_box.Text = item[0].SubItems[2].Text;
                 sex_box.Text = item[0].SubItems[3].Text;
                 //affiliation_box.Text = item[0].SubItems[4].Text;
-
                 //所属をIDで判別
-                for(int i = 0; i < partManage.Count; i++)
+                for (int i = 0; i < partManage.Count; i++)
                 {
                     if (partManage[i] == item[0].SubItems[6].Text)
                     {
-                        affiliation_box.SelectedIndex= i;
+                        affiliation_box.SelectedIndex = i;
+                        Console.WriteLine(i);
                     }
                 }
                 comment_box.Text = item[0].SubItems[5].Text;
@@ -407,13 +417,11 @@ namespace member_kanri
                 affiliation_box.Text = "";
                 comment_box.Text = "";
             }
-
         }
 
         //とりこみ（起動時にDBから表示）
         /* private void Form1_Load(object sender, EventArgs e)
          {
-
              //ファイルパスの指定
              string path = ConfigurationManager.AppSettings["CSVfilePath"];
              //streamReaderの定義（ファイル開けるようにしてる）
@@ -437,7 +445,7 @@ namespace member_kanri
              streamReader.Close();
          }*/
 
-        //閉じたときにCSVに保存
+       /* //閉じたときにCSVに保存
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             //ファイルパスの指定
@@ -445,7 +453,6 @@ namespace member_kanri
             //steamwriterという型のswという変数に、()のなかでファイルの場所と名前を指定したものを代入
             //（）のなかはダイアログで指定したファイルのこと↓
             StreamWriter sw = new StreamWriter(path);
-
             for (int i = 0; i < listView1.Items.Count; i++)
             {
                 //リストビューのアイテムをカンマ区切りに並べたものをＳに代入
@@ -468,20 +475,24 @@ namespace member_kanri
             //ファイルをとじる
             sw.Close();
         }
-
-
-
+*/
         //編集
         private void button1_Click(object sender, EventArgs e)
         {
-            Form　part = new PartForm();
+            Form part = new PartForm();
             part.ShowDialog();
         }
-
         //再読み込み
         private void button2_Click(object sender, EventArgs e)
         {
             listView1.Items.Clear();
+            id_box.Text = "";
+            name_box.Text = "";
+            age_box.Text = "";
+            sex_box.Text = "";
+            affiliation_box.Text = "";
+            comment_box.Text = "";
+
 
             string server = "118.27.38.218";
             string database = "study";
@@ -490,23 +501,18 @@ namespace member_kanri
             string charset = "utf8";
             //MYSQLの接続情報
             string connectionString = string.Format("Server={0};Database={1};Uid={2};Pwd={3};Charset={4}", server, database, user, pass, charset);
-
             //↑の接続情報をつかって接続じゅんぴしてる
             var connection = new MySqlConnection(connectionString);
-
             // MySQLでやりたいSQL文
             var userInfo = "SELECT ID,NAME,AGE,SEX, (SELECT NAME FROM PARTINFO WHERE ID=KEKKA.PART ) " +
                            "AS PARTNAME ,COMMENT, PART FROM USERINFO  KEKKA ORDER BY CAST(ID AS SIGNED)";
-            var partInfo = "SELECT * FROM PARTINFO WHERE DELETE_FLG = 0";
-
-
+            //var partInfo = "SELECT * FROM PARTINFO WHERE DELETE_FLG = 0";
             // 指定したDBの情報とSQL文をmysqlCommandが実行してくれてる（のをuserinfocommandという変数にしてる）
             var userInfoCommand = new MySqlCommand(userInfo, connection);
-            var partInfoCommand = new MySqlCommand(partInfo, connection);
+            //var partInfoCommand = new MySqlCommand(partInfo, connection);
             {
                 // 接続開始
                 connection.Open();
-
                 // SELECT文の実行
                 var userReader = userInfoCommand.ExecuteReader();
                 // 1行ずつ読み取ってlistviewに表示
@@ -520,10 +526,8 @@ namespace member_kanri
                     lvi.SubItems.Add(userReader["PARTNAME"].ToString());
                     lvi.SubItems.Add(userReader["COMMENT"].ToString());
                     lvi.SubItems.Add(userReader["PART"].ToString());
-
                 }
                 connection.Close();
-
 
                 //deleteフラグが１のとき
                 var deleteItem = "SELECT NAME FROM PARTINFO WHERE DELETE_FLG = 1";
@@ -552,8 +556,7 @@ namespace member_kanri
                 connection.Close();
             }
         }
-
     }
 }
-    
+
 
