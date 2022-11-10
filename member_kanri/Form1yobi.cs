@@ -119,7 +119,7 @@ namespace member_kanri
             var partInfoCommand = new MySqlCommand(partInfo, connection);
 
             //更新しているかどうかのフラグ（更新したらtrue、falseなら更新できない）
-            bool isDone = false;
+            //bool isDone = false;
             for (var i = 0; i < listView1.Items.Count; i++)
             {
                 //リストボックスの中の行の集まりの中の［i］行目(1人分) 
@@ -129,7 +129,7 @@ namespace member_kanri
                 {
                     //USERINFOの情報を持ってきて、同じIDを探す、値が同じなら普通に更新、違うのがあれば再読み込み
                     var userEdit = "SELECT ID,NAME,AGE,SEX, (SELECT NAME FROM PARTINFO WHERE ID=KEKKA.PART ) " +
-                                   "AS PARTNAME ,COMMENT, PART FROM USERINFO KEKKA ORDER BY CAST(ID AS SIGNED)";
+                                   "AS PARTNAME ,COMMENT, PART FROM USERINFO KEKKA ";
                     var editConnection = new MySqlConnection(connectionString);
                     var editCommand = new MySqlCommand(userEdit, editConnection);
                     editConnection.Open();
@@ -137,23 +137,23 @@ namespace member_kanri
 
                     while (editReader.Read())
                     {
-                        if (listView1.Items[i].Text == editReader["ID"].ToString() && 
-                            (listView1.Items[i].SubItems[1].Text != editReader["NAME"].ToString() ||
-                            listView1.Items[i].SubItems[2].Text != editReader["AGE"].ToString() ||
-                            listView1.Items[i].SubItems[3].Text != editReader["SEX"].ToString() ||
-                            listView1.Items[i].SubItems[4].Text != editReader["PARTNAME"].ToString() ||
-                            listView1.Items[i].SubItems[5].Text != editReader["COMMENT"].ToString()))
+                        if ((listView1.Items[i].SubItems[1].Text != editReader["NAME"].ToString()) ||
+                            (listView1.Items[i].SubItems[2].Text != editReader["AGE"].ToString()) ||
+                            (listView1.Items[i].SubItems[3].Text != editReader["SEX"].ToString()) ||
+                            (listView1.Items[i].SubItems[5].Text != editReader["COMMENT"].ToString()) ||
+                            (listView1.Items[i].SubItems[6].Text != editReader["PART"].ToString()))
                         {
                             MessageBox.Show("再読み込みしてください", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            editConnection.Close();
+                            return;
                         }
-                        else if (listView1.Items[i].Text == editReader["ID"].ToString() &&
-                            (listView1.Items[i].SubItems[1].Text == editReader["NAME"].ToString() &&
-                            listView1.Items[i].SubItems[2].Text == editReader["AGE"].ToString() && 
-                            listView1.Items[i].SubItems[3].Text == editReader["SEX"].ToString() &&
-                            listView1.Items[i].SubItems[4].Text == editReader["PARTNAME"].ToString() &&
-                            listView1.Items[i].SubItems[5].Text == editReader["COMMENT"].ToString()))
+                        if ((listView1.Items[i].SubItems[1].Text == editReader["NAME"].ToString()) &&
+                            (listView1.Items[i].SubItems[2].Text == editReader["AGE"].ToString()) &&
+                            (listView1.Items[i].SubItems[3].Text == editReader["SEX"].ToString()) &&
+                            (listView1.Items[i].SubItems[5].Text == editReader["COMMENT"].ToString()) &&
+                            (listView1.Items[i].SubItems[6].Text == editReader["PART"].ToString()))
                         {
-                            if(MessageBox.Show("上書きしますか", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            if (MessageBox.Show("上書きしますか", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 //UPDATE
                                 ListViewItem target = listView1.Items[i];
@@ -244,85 +244,102 @@ namespace member_kanri
                         }
                         break;
                     }
-                    isDone = true;
-                    editConnection.Close();
                 }
             }
-            if (isDone == false)
+
+            //追加（DBにすでに存在してるIDで追加私用としたとき）
+            var insert = "SELECT ID FROM USERINFO";
+            var insertConnection = new MySqlConnection(connectionString);
+            var insertCommand = new MySqlCommand(insert, insertConnection);
+            insertConnection.Open();
+            var insertReader = insertCommand.ExecuteReader();
+
+            while (insertReader.Read())
             {
-                // //idboxにはいってる値と同じ値をもつ行がないとき（リストボックスの中のiの情報のなかの[0]）(INSERT)
-                //↑じゃない場合、テキストボックスの中身を空白いれてリストボックスに追加
-                // listView1.Items.Add(id_box.Text).SubItems.Add(name_box.Text);
-                ListViewItem lvi = listView1.Items.Add(id_box.Text);
-                lvi.SubItems.Add(name_box.Text);
-                lvi.SubItems.Add(age_box.Text);
-                lvi.SubItems.Add(sex_box.Text);
-                lvi.SubItems.Add(affiliation_box.Text);
-                lvi.SubItems.Add(comment_box.Text);
-
-                var userInsert =
-                    "INSERT INTO USERINFO (ID, NAME, AGE, SEX, PART, COMMENT) VALUES " +
-                    "(@id,@name,@age,@sex,@part,@comment)";
-
-                var ID_INSERT = id_box.Text;
-                var NAME_INSERT = name_box.Text;
-                var AGE_INSERT = age_box.Text;
-                var SEX_INSERT = sex_box.Text;
-                //性別を戻す
-                if (sex_box.Text == "男")
+                //追加しようとしてるid_boxに入ってるIDがDBのIDに存在しないとき
+                if (id_box.Text == insertReader["ID"].ToString())
                 {
-                    SEX_INSERT = "1";
+                    // //idboxにはいってる値と同じ値をもつ行がないとき（リストボックスの中のiの情報のなかの[0]）(INSERT)
+                    //↑じゃない場合、テキストボックスの中身を空白いれてリストボックスに追加
+                    // listView1.Items.Add(id_box.Text).SubItems.Add(name_box.Text);
+                    ListViewItem lvi = listView1.Items.Add(id_box.Text);
+                    lvi.SubItems.Add(name_box.Text);
+                    lvi.SubItems.Add(age_box.Text);
+                    lvi.SubItems.Add(sex_box.Text);
+                    lvi.SubItems.Add(affiliation_box.Text);
+                    lvi.SubItems.Add(comment_box.Text);
+
+                    var userInsert =
+                        "INSERT INTO USERINFO (ID, NAME, AGE, SEX, PART, COMMENT) VALUES " +
+                        "(@id,@name,@age,@sex,@part,@comment)";
+
+                    var ID_INSERT = id_box.Text;
+                    var NAME_INSERT = name_box.Text;
+                    var AGE_INSERT = age_box.Text;
+                    var SEX_INSERT = sex_box.Text;
+                    //性別を戻す
+                    if (sex_box.Text == "男")
+                    {
+                        SEX_INSERT = "1";
+                    }
+                    else
+                    {
+                        SEX_INSERT = "2";
+                    }
+                    var PART_INSERT = affiliation_box.Text;
+                    /*1こづついふかく
+                        * if (affiliation_box.Text == "阪神タイガース" ) {
+                        PART = "1";
+                    }
+            */
+                    //dictionarｙつかう
+                    var partInsert = new Dictionary<string, string>();
+                    connection.Open();
+                    var partInfoReader = partInfoCommand.ExecuteReader();
+
+                    //UPDATEと同じ理由
+                    while (partInfoReader.Read())
+                    {
+                        partInsert.Add(partInfoReader["ID"].ToString(), partInfoReader["NAME"].ToString());
+                    }
+                    foreach (KeyValuePair<string, string> kvp in partInsert)
+                    {
+                        if (affiliation_box.Text == kvp.Value)
+                        {
+                            PART_INSERT = kvp.Key;
+                        }
+                    }
+                    connection.Close();
+                    var COMMENT_INSERT = comment_box.Text;
+
+                    var userInsertCommand = new MySqlCommand(userInsert, connection);
+                    connection.Open();
+
+                    userInsertCommand.Parameters.AddWithValue("@id", ID_INSERT);
+                    userInsertCommand.Parameters.AddWithValue("@name", NAME_INSERT);
+                    userInsertCommand.Parameters.AddWithValue("@age", AGE_INSERT);
+                    userInsertCommand.Parameters.AddWithValue("@sex", SEX_INSERT);
+                    userInsertCommand.Parameters.AddWithValue("@part", PART_INSERT);
+                    userInsertCommand.Parameters.AddWithValue("@comment", COMMENT_INSERT);
+
+                    userInsertCommand.ExecuteNonQuery();
+                    connection.Close();
+                    /*"                     "ID= '" + id_box.Text + "'," +
+                    "NAME= '" + name_box.Text + "'," +
+                    "AGE= '" + age_box.Text + "'," +
+                    "SEX= '" + sex_box.Text + "'," +
+                    "PART= '" + affiliation_box.Text + "'," +
+                    "COMMENT= '" + comment_box.Text + "')";*/
                 }
+                //追加しようとしてるid_boxに入ってるIDがDBのIDに存在するとき
                 else
                 {
-                    SEX_INSERT = "2";
+                    MessageBox.Show("再読み込みしてください", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
                 }
-                var PART_INSERT = affiliation_box.Text;
-                /*1こづついふかく
-                    * if (affiliation_box.Text == "阪神タイガース" ) {
-                    PART = "1";
-                }
-    */
-                //dictionarｙつかう
-                var partInsert = new Dictionary<string, string>();
-                connection.Open();
-                var partInfoReader = partInfoCommand.ExecuteReader();
-
-                //UPDATEと同じ理由
-                while (partInfoReader.Read())
-                {
-                    partInsert.Add(partInfoReader["ID"].ToString(), partInfoReader["NAME"].ToString());
-                }
-                foreach (KeyValuePair<string, string> kvp in partInsert)
-                {
-                    if (affiliation_box.Text == kvp.Value)
-                    {
-                        PART_INSERT = kvp.Key;
-                    }
-                }
-                connection.Close();
-                var COMMENT_INSERT = comment_box.Text;
-
-                var insertCommand = new MySqlCommand(userInsert, connection);
-                connection.Open();
-
-                insertCommand.Parameters.AddWithValue("@id", ID_INSERT);
-                insertCommand.Parameters.AddWithValue("@name", NAME_INSERT);
-                insertCommand.Parameters.AddWithValue("@age", AGE_INSERT);
-                insertCommand.Parameters.AddWithValue("@sex", SEX_INSERT);
-                insertCommand.Parameters.AddWithValue("@part", PART_INSERT);
-                insertCommand.Parameters.AddWithValue("@comment", COMMENT_INSERT);
-
-                insertCommand.ExecuteNonQuery();
-                connection.Close();
-                /*" +
-                "ID= '" + id_box.Text + "'," +
-                "NAME= '" + name_box.Text + "'," +
-                "AGE= '" + age_box.Text + "'," +
-                "SEX= '" + sex_box.Text + "'," +
-                "PART= '" + affiliation_box.Text + "'," +
-                "COMMENT= '" + comment_box.Text + "')";*/
+                break;
             }
+            insertConnection.Close();
         }
 
         //削除
@@ -337,23 +354,21 @@ namespace member_kanri
             string connectionString = string.Format("Server={0};Database={1};Uid={2};Pwd={3};Charset={4}", server, database, user, pass, charset);
             var connection = new MySqlConnection(connectionString);
 
-            //もし選択されたら、
+            //選択されたら、
             if (listView1.SelectedItems.Count > 0)
             {
+                 
 
-
-
-
-
-                //選択されたものをDBから消す
-                var userdelete = "DELETE FROM USERINFO WHERE ID=@id";
-                var deleteCommand = new MySqlCommand(userdelete, connection);
-                connection.Open();
-                deleteCommand.Parameters.AddWithValue("@id", listView1.SelectedItems[0].Text);
-                deleteCommand.ExecuteNonQuery();
-                connection.Close();
-                //listviewからけす
-                listView1.Items.Remove(listView1.SelectedItems[0]);
+                    //選択されたものをDBから消す
+                    var userDelete = "DELETE FROM USERINFO WHERE ID=@id";
+                    var userDeleteCommand = new MySqlCommand(userDelete, connection);
+                    connection.Open();
+                    userDeleteCommand.Parameters.AddWithValue("@id", listView1.SelectedItems[0].Text);
+                    userDeleteCommand.ExecuteNonQuery();
+                    connection.Close();
+                    //listviewからけす
+                    listView1.Items.Remove(listView1.SelectedItems[0]);
+               
             }
             //選択されなかったらメッセージボックスを出す
             else if(listView1.SelectedItems.Count > -1)
@@ -363,7 +378,6 @@ namespace member_kanri
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             }
-            connection.Close();
         }
 
         //とじるぼたん
@@ -402,7 +416,6 @@ namespace member_kanri
                     if (partManage[i] == item[0].SubItems[6].Text)
                     {
                         affiliation_box.SelectedIndex = i;
-                        Console.WriteLine(i);
                     }
                 }
                 comment_box.Text = item[0].SubItems[5].Text;
