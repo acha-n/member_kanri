@@ -45,9 +45,7 @@ namespace member_kanri
                     listBox1.Items.Add(partReader["ID"].ToString() + " " + partReader["NAME"].ToString());
                 }
                 loadConnection.Close();
-            }
-
-            
+            }            
         }
 
        /* //りすとぼっくす 選択されたらリストボックスへ表示
@@ -63,11 +61,8 @@ namespace member_kanri
         //ついか
         private void addition_button_Click(object sender, EventArgs e)
         {
-
             //textboxの中身をリストボックスへ
             // listBox1.Items.Add((listBox1.Items.Count + 1) + " " + PARTtextbox.Text);
-
-
             //追加を押したらDBへ、IDは最後の番号＋１
             string server = "118.27.38.218";
             string database = "study";
@@ -88,7 +83,6 @@ namespace member_kanri
             //PARTINFOのdeleteフラグが０の最新1件をせれくと
             var partInsertView = "SELECT ID,NAME FROM PARTINFO  WHERE DELETE_FLG =0 ORDER BY CAST(ID AS SIGNED) DESC LIMIT 1";
             var partViewCommand = new MySqlCommand(partInsertView, loadConnection);
-
 
             loadConnection.Open();
 
@@ -170,7 +164,6 @@ namespace member_kanri
                 {
                     listBox1.Items.Remove(listBox1.Items[listBox1.SelectedIndex]);
                 }
-
             }
             //選択されなかったらメッセージボックスを出す
             else
@@ -180,11 +173,6 @@ namespace member_kanri
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             }
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }
