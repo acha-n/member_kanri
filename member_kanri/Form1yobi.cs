@@ -117,7 +117,7 @@ namespace member_kanri
             var partInfo = "SELECT ID, NAME FROM PARTINFO";
             var connection = new MySqlConnection(connectionString);
             var partInfoCommand = new MySqlCommand(partInfo, connection);
-
+            //更新したかどうかのフラグ（trueなら更新できる）
             bool isDone = false;
             for (var i = 0; i < listView1.Items.Count; i++)
             {
@@ -149,8 +149,8 @@ namespace member_kanri
                             if (listView1.Items[i].SubItems[1].Text != editReader["NAME"].ToString() ||
                                 listView1.Items[i].SubItems[2].Text != editReader["AGE"].ToString() ||
                                  sex_num != editReader["SEX"].ToString() ||
-                                listView1.Items[i].SubItems[6].Text != editReader["PART"].ToString() || 
-                                listView1.Items[i].SubItems[5].Text != editReader["COMMENT"].ToString())
+                                listView1.Items[i].SubItems[5].Text != editReader["COMMENT"].ToString() || 
+                                listView1.Items[i].SubItems[6].Text != editReader["PART"].ToString())
                             {
                                 
                                 MessageBox.Show("再読み込みしてください", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -357,34 +357,77 @@ namespace member_kanri
             if (listView1.SelectedItems.Count > 0)
             {
                 //選択されたアイテムのIDがDBのIDにあるかどうか
-                var delete = "SELECT ID FROM USERINFO";
+                var delete = "SELECT * FROM USERINFO";
                 var deleteConnection = new MySqlConnection(connectionString);
                 var deleteCommand = new MySqlCommand(delete, deleteConnection);
                 deleteConnection.Open();
                 var deleteReader = deleteCommand.ExecuteReader();
-
+                string sex_num;
+                if (listView1.Items[0].SubItems[3].Text == "男")
+                {
+                    sex_num = "1";
+                }
+                else
+                {
+                    sex_num = "2";
+                }
                 while (deleteReader.Read())
                 {
                     deleteReader["ID"].ToString();
+                    deleteReader["NAME"].ToString();
+                    deleteReader["AGE"].ToString();
+                    deleteReader["SEX"].ToString();
+                    deleteReader["COMMENT"].ToString();
+                    deleteReader["PART"].ToString();
                 }
-                //DBにない（IDだけじゃなくて全部比較）
-                if (listView1.SelectedItems[0].Text != deleteReader["ID"].ToString())
+                if(id_box.Text != listView1.Items[0].Text)
                 {
-                    MessageBox.Show("既に削除されています", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    //消そうとしたらlistviewとDBでID含めて全部違う（先にけ消されて存在しない）
+                    if (
+                        listView1.Items[0].SubItems[1].Text != deleteReader["NAME"].ToString() &&
+                        listView1.Items[0].SubItems[2].Text != deleteReader["AGE"].ToString() &&
+                         sex_num != deleteReader["SEX"].ToString() &&
+                        listView1.Items[0].SubItems[5].Text != deleteReader["COMMENT"].ToString() &&
+                        listView1.Items[0].SubItems[6].Text != deleteReader["PART"].ToString())
+                    {
+                        MessageBox.Show("既に削除されています", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
                 }
-                else if (MessageBox.Show("削除しますか", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                else if(id_box.Text == listView1.Items[0].Text)
                 {
-                    var userdelete = "DELETE FROM USERINFO WHERE ID=@id";
-                    var userDeleteCommand = new MySqlCommand(userdelete, connection);
-                    connection.Open();
-                    userDeleteCommand.Parameters.AddWithValue("@id", listView1.SelectedItems[0].Text);
-                    userDeleteCommand.ExecuteNonQuery();
-                    connection.Close();
-                    listView1.Items.RemoveAt(listView1.SelectedItems[0].Index);
+                    //消そうとしたらlistviewとDBでID以外違う（消そうと思ったものが変更されてる）
+                    if (
+                        listView1.Items[0].SubItems[1].Text != deleteReader["NAME"].ToString() ||
+                        listView1.Items[0].SubItems[2].Text != deleteReader["AGE"].ToString() ||
+                        sex_num != deleteReader["SEX"].ToString() ||
+                        listView1.Items[0].SubItems[5].Text != deleteReader["COMMENT"].ToString() ||
+                        listView1.Items[0].SubItems[6].Text != deleteReader["PART"].ToString())
+                    {
+                         MessageBox.Show("変更されています", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
+                    //消そうとしたらlistviewとDBでIDも全部同じ
+                    else if (
+                        listView1.Items[0].SubItems[1].Text == deleteReader["NAME"].ToString() &&
+                        listView1.Items[0].SubItems[2].Text == deleteReader["AGE"].ToString() &&
+                         sex_num == deleteReader["SEX"].ToString() &&
+                        listView1.Items[0].SubItems[5].Text == deleteReader["COMMENT"].ToString() &&
+                        listView1.Items[0].SubItems[6].Text == deleteReader["PART"].ToString())
+                    {
+                        if (MessageBox.Show("削除しますか", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            var userdelete = "DELETE FROM USERINFO WHERE ID=@id";
+                            var userDeleteCommand = new MySqlCommand(userdelete, connection);
+                            connection.Open();
+                            userDeleteCommand.Parameters.AddWithValue("@id", listView1.SelectedItems[0].Text);
+                            userDeleteCommand.ExecuteNonQuery();
+                            connection.Close();
+                            listView1.Items.RemoveAt(listView1.SelectedItems[0].Index);
+                        }
+                    }
                 }
                 deleteConnection.Close();
             }
-            //選択されなかったらメッセージボックスを出す
+            //選択されなかったら
             else
             {
                 MessageBox.Show("選択してください",
