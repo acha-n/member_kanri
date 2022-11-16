@@ -247,10 +247,11 @@ namespace member_kanri
                             editConnection.Close();
                             break*/;
                         }
-                        else if(listView1.Items[i].Text != editReader["ID"].ToString())
-                        {
-                            MessageBox.Show("削除されています", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        }
+                    }
+                    //編集しようしたIDが既に消されてた時
+                    if (listView1.Items[i].Text != editReader["ID"].ToString())
+                    {
+                        MessageBox.Show("削除されています", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                     isDone = true;
                     editConnection.Close();
