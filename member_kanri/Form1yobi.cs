@@ -23,7 +23,9 @@ namespace member_kanri
     //立ち上げたときに表示
     public partial class Form1 : Form
     {
-        List<String> partManage = new List<string>();
+        List<String> partManage;//= new List<string>();
+       // private bool insertReader;
+
         //Dictionary<string, string> partInfo = new Dictionary<string, string>(); 
         public Form1()
         {
@@ -46,15 +48,16 @@ namespace member_kanri
 
                 //所属のみもってきて所属ボックスへ
                 var partReader = partInfoCommand.ExecuteReader();
+                partManage = new List<string>();
+
+                //実行（↑までは準備）
+                while (partReader.Read())
                 {
-                    //実行（↑までは準備）
-                    while (partReader.Read())
-                    {
-                        affiliation_box.Items.Add(partReader["NAME"].ToString());
-                        partManage.Add(partReader["ID"].ToString());
-                    }
-                    connection.Close();
+                    partManage.Add(partReader["ID"].ToString());
+                    affiliation_box.Items.Add(partReader["NAME"].ToString());
                 }
+                connection.Close();
+                
                 connection.Open();
                 // SELECT文の実行
                 var userReader = userInfoCommand.ExecuteReader();
@@ -111,6 +114,17 @@ namespace member_kanri
             //接続情報
             MySqlConnection connection = getConnection();
             var partInfoCommand = new MySqlCommand(partInfo, connection);
+          /*  List<string> partid;
+            connection.Open();
+            var partInfoReader2 = partInfoCommand.ExecuteReader();
+            partid = new List<string>();
+            //↓のPARTNAMEとIDを追加
+            while (partInfoReader2.Read())
+            {
+                partid.Add(partInfoReader2["ID"].ToString());
+                affiliation_box.Items.Add(partInfoReader2["NAME"].ToString());
+            }
+            connection.Close();*/
             //更新したかどうかのフラグ（更新したらtrue、trueなら追加されない）
             bool isDone = false;
 
@@ -167,6 +181,7 @@ namespace member_kanri
                             target.SubItems[4].Text = affiliation_box.Text;
                             target.SubItems[5].Text = comment_box.Text;
 
+
                             var userUpdate = "UPDATE USERINFO SET ID=@id,NAME=@name,AGE=@age,SEX=@sex,PART=@part,COMMENT=@comment WHERE ID=@id";
                             var ID_UPDATE = listView1.Items[i].Text;
                             var NAME_UPDATE = listView1.Items[i].SubItems[1].Text;
@@ -181,24 +196,27 @@ namespace member_kanri
                             {
                                 SEX_UPDATE = "2";
                             }
-                            var PART_UPDATE = listView1.Items[i].SubItems[4].Text;
+                            var PART_UPDATE = partManage[affiliation_box.SelectedIndex];
                             var COMMENT_UPDATE = listView1.Items[i].SubItems[5].Text;
                             connection.Open();
+
                             //所属をIDでDBに入れる
-                            var partUpdate = new Dictionary<string, string>();
-                            var partInfoReader2 = partInfoCommand.ExecuteReader();
+                            //var partUpdate = new Dictionary<string, string>();
+                          /*  var partInfoReader2 = partInfoCommand.ExecuteReader();
+                            partid = new List<string>();
                             //↓のPARTNAMEとIDを追加
                             while (partInfoReader2.Read())
                             {
-                                partUpdate.Add(partInfoReader2["ID"].ToString(), partInfoReader2["NAME"].ToString());
-                            }
-                            foreach (KeyValuePair<string, string> kvp in partUpdate)
+                                partid.Add(partInfoReader2["ID"].ToString());
+                                affiliation_box.Items.Add(partInfoReader2["NAME"].ToString());
+                            }*/
+                        /*    foreach (KeyValuePair<string, string> kvp in partUpdate)
                             {
                                 if (affiliation_box.Text == kvp.Value)
                                 {
                                     PART_UPDATE = kvp.Key;
                                 }
-                            }
+                            }*/
                             connection.Close();
 
                             //deleteフラグが１で赤の所属を変更したとき
@@ -264,6 +282,7 @@ namespace member_kanri
             else
             {
                 //追加の場合はまず既に存在するかをチェックする。存在した場合はワーニングしてリロードして終わっちゃう
+                //0,0,0,0,0,は、IDは必要だけどそれ以外は何かしら入ってるでしょ見たいな感じ（ダミーで値入れてる）
                 if (getRecordStatus(id_box.Text, "0", "0", "0", "0", "0") != TableStatus.NotFound)
                 {
                     MessageBox.Show("すでに追加されています", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -297,14 +316,8 @@ namespace member_kanri
                 {
                     SEX_INSERT = "2";
                 }
-                var PART_INSERT = affiliation_box.Text;
-                //所属をドロップダウンリストのインデックスをもとにlistにしてIDとPARTといしょにする
-
-
-
-
-
-
+                var PART_INSERT = partManage[affiliation_box.SelectedIndex];
+                //所属をドロップダウンリストのインデックスをもとにlistにしてIDとPARTと一緒にする
 
                 var COMMENT_INSERT = comment_box.Text;
 
@@ -322,12 +335,7 @@ namespace member_kanri
 
                 connection.Close();
             }
-           
-            //追加
-            if (isDone == false)
-            {
-
-            }
+      
         }
         /// <summary>
         /// 削除
@@ -356,17 +364,15 @@ namespace member_kanri
                 MessageBox.Show("指定されたデータは既に他のユーザによって削除されています。\nリロードします。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 ReloadData();
                 return;
-
             }
             if (status == TableStatus.Different)
             {
                 MessageBox.Show("指定されたデータは既に他のユーザによって変更されています。\nリロードします。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 ReloadData();
                 return;
-
             }
 
-            if (MessageBox.Show("本当に削除してもよろしおますか？", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("本当に削除してもよろしいですか？", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 MySqlConnection connection = getConnection();
                 var userdelete = "DELETE FROM USERINFO WHERE ID=@id";
@@ -378,7 +384,6 @@ namespace member_kanri
                 listView1.Items.RemoveAt(listView1.SelectedItems[0].Index);
             }
         }
-
 
         //とじるぼたん
         private void close_button_Click(object sender, EventArgs e)
@@ -404,10 +409,10 @@ namespace member_kanri
                 age_box.Text = item[0].SubItems[2].Text;
                 sex_box.Text = item[0].SubItems[3].Text;
                 //affiliation_box.Text = item[0].SubItems[4].Text;
-
                 //所属をIDで判別
                 for (int i = 0; i < partManage.Count; i++)
                 {
+                    //subItems[6]のPARTAME
                     if (partManage[i] == item[0].SubItems[6].Text)
                     {
                         affiliation_box.SelectedIndex = i;
@@ -425,13 +430,10 @@ namespace member_kanri
                 affiliation_box.Text = "";
                 comment_box.Text = "";
             }
-
         }
-
         //とりこみ（起動時にDBから表示）
         /* private void Form1_Load(object sender, EventArgs e)
          {
-
              //ファイルパスの指定
              string path = ConfigurationManager.AppSettings["CSVfilePath"];
              //streamReaderの定義（ファイル開けるようにしてる）
@@ -454,7 +456,6 @@ namespace member_kanri
              //ファイルを閉じる
              streamReader.Close();
          }*/
-
         //閉じたときにCSVに保存
         /*  private void Form1_FormClosed(object sender, FormClosedEventArgs e)
           {
@@ -487,10 +488,8 @@ namespace member_kanri
               sw.Close();
           }
   */
-
-
         /// <summary>
-        /// 
+        /// 編集
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -547,7 +546,6 @@ namespace member_kanri
 
             }
             connection.Close();
-
 
             //deleteフラグが１のとき
             var deleteItem = "SELECT NAME FROM PARTINFO WHERE DELETE_FLG = 1";
