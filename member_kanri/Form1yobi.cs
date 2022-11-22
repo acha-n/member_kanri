@@ -24,7 +24,7 @@ namespace member_kanri
     public partial class Form1 : Form
     {
         List<String> partManage;//= new List<string>();
-       // private bool insertReader;
+                                // private bool insertReader;
 
         //Dictionary<string, string> partInfo = new Dictionary<string, string>(); 
         public Form1()
@@ -57,7 +57,7 @@ namespace member_kanri
                     affiliation_box.Items.Add(partReader["NAME"].ToString());
                 }
                 connection.Close();
-                
+
                 connection.Open();
                 // SELECT文の実行
                 var userReader = userInfoCommand.ExecuteReader();
@@ -114,17 +114,17 @@ namespace member_kanri
             //接続情報
             MySqlConnection connection = getConnection();
             var partInfoCommand = new MySqlCommand(partInfo, connection);
-          /*  List<string> partid;
-            connection.Open();
-            var partInfoReader2 = partInfoCommand.ExecuteReader();
-            partid = new List<string>();
-            //↓のPARTNAMEとIDを追加
-            while (partInfoReader2.Read())
-            {
-                partid.Add(partInfoReader2["ID"].ToString());
-                affiliation_box.Items.Add(partInfoReader2["NAME"].ToString());
-            }
-            connection.Close();*/
+            /*  List<string> partid;
+              connection.Open();
+              var partInfoReader2 = partInfoCommand.ExecuteReader();
+              partid = new List<string>();
+              //↓のPARTNAMEとIDを追加
+              while (partInfoReader2.Read())
+              {
+                  partid.Add(partInfoReader2["ID"].ToString());
+                  affiliation_box.Items.Add(partInfoReader2["NAME"].ToString());
+              }
+              connection.Close();*/
             //更新したかどうかのフラグ（更新したらtrue、trueなら追加されない）
             bool isDone = false;
 
@@ -149,7 +149,7 @@ namespace member_kanri
                 var editCommand = new MySqlCommand(userEdit, editConnection);
                 editConnection.Open();
                 var editReader = editCommand.ExecuteReader();
-                int i=0;
+                int i = 0;
                 string sex_num;
                 if (listView1.Items[i].SubItems[3].Text == "男")
                 {
@@ -160,8 +160,13 @@ namespace member_kanri
                     sex_num = "2";
                 }
                 while (editReader.Read())
-                {
-                    if (listView1.Items[i].Text == editReader["ID"].ToString())
+
+                {  //編集しようしたIDが既に消されてた時                 
+                    if (listView1.Items[i].Text != editReader["ID"].ToString())
+                    {
+                        MessageBox.Show("削除されています", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
+                    else //if (listView1.Items[i].Text == editReader["ID"].ToString())
                     {
                         if (listView1.Items[i].SubItems[1].Text != editReader["NAME"].ToString() ||
                             listView1.Items[i].SubItems[2].Text != editReader["AGE"].ToString() ||
@@ -169,6 +174,13 @@ namespace member_kanri
                             listView1.Items[i].SubItems[5].Text != editReader["COMMENT"].ToString() ||
                             listView1.Items[i].SubItems[6].Text != editReader["PART"].ToString())
                         {
+
+                            Console.WriteLine(editReader["NAME"].ToString());
+                            Console.WriteLine(editReader["AGE"].ToString());
+                            Console.WriteLine(editReader["SEX"].ToString());
+                            Console.WriteLine(editReader["COMMENT"].ToString());
+                            Console.WriteLine(editReader["PART"].ToString());
+
                             MessageBox.Show("再読み込みしてください", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
                         else if (MessageBox.Show("上書きしますか", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -198,26 +210,26 @@ namespace member_kanri
                             }
                             var PART_UPDATE = partManage[affiliation_box.SelectedIndex];
                             var COMMENT_UPDATE = listView1.Items[i].SubItems[5].Text;
-                            connection.Open();
+                            //connection.Open();
 
                             //所属をIDでDBに入れる
                             //var partUpdate = new Dictionary<string, string>();
-                          /*  var partInfoReader2 = partInfoCommand.ExecuteReader();
-                            partid = new List<string>();
-                            //↓のPARTNAMEとIDを追加
-                            while (partInfoReader2.Read())
-                            {
-                                partid.Add(partInfoReader2["ID"].ToString());
-                                affiliation_box.Items.Add(partInfoReader2["NAME"].ToString());
-                            }*/
-                        /*    foreach (KeyValuePair<string, string> kvp in partUpdate)
-                            {
-                                if (affiliation_box.Text == kvp.Value)
+                            /*  var partInfoReader2 = partInfoCommand.ExecuteReader();
+                              partid = new List<string>();
+                              //↓のPARTNAMEとIDを追加
+                              while (partInfoReader2.Read())
+                              {
+                                  partid.Add(partInfoReader2["ID"].ToString());
+                                  affiliation_box.Items.Add(partInfoReader2["NAME"].ToString());
+                              }*/
+                            /*    foreach (KeyValuePair<string, string> kvp in partUpdate)
                                 {
-                                    PART_UPDATE = kvp.Key;
-                                }
-                            }*/
-                            connection.Close();
+                                    if (affiliation_box.Text == kvp.Value)
+                                    {
+                                        PART_UPDATE = kvp.Key;
+                                    }
+                                }*/
+                            //connection.Close();
 
                             //deleteフラグが１で赤の所属を変更したとき
                             var deleteItem = "SELECT NAME FROM PARTINFO WHERE DELETE_FLG = 1";
@@ -262,17 +274,14 @@ namespace member_kanri
                             "PART='" + listView1.Items[i].SubItems[4].Text + "'," +
                             "COMMENT='" + listView1.Items[i].SubItems[5].Text + "'" +
                             "WHERE ID ='" + listView1.Items[i].Text + "'";*/
+                            return;
                         }
                         //isDone = true;
                         /*editConnection.Close();
                         break;*/
                         break;
                     }
-                    //編集しようしたIDが既に消されてた時
-                    if (listView1.Items[i].Text != editReader["ID"].ToString())
-                    {
-                        MessageBox.Show("削除されています", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    }
+                  
                     isDone = true;
                     editConnection.Close();
                     break;
@@ -335,7 +344,7 @@ namespace member_kanri
 
                 connection.Close();
             }
-      
+
         }
         /// <summary>
         /// 削除
@@ -371,17 +380,19 @@ namespace member_kanri
                 ReloadData();
                 return;
             }
-
-            if (MessageBox.Show("本当に削除してもよろしいですか？", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (status==TableStatus.Same)
             {
-                MySqlConnection connection = getConnection();
-                var userdelete = "DELETE FROM USERINFO WHERE ID=@id";
-                var userDeleteCommand = new MySqlCommand(userdelete, connection);
-                connection.Open();
-                userDeleteCommand.Parameters.AddWithValue("@id", listView1.SelectedItems[0].Text);
-                userDeleteCommand.ExecuteNonQuery();
-                connection.Close();
-                listView1.Items.RemoveAt(listView1.SelectedItems[0].Index);
+                if(MessageBox.Show("本当に削除してもよろしいですか？", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    MySqlConnection connection = getConnection();
+                    var userdelete = "DELETE FROM USERINFO WHERE ID=@id";
+                    var userDeleteCommand = new MySqlCommand(userdelete, connection);
+                    connection.Open();
+                    userDeleteCommand.Parameters.AddWithValue("@id", listView1.SelectedItems[0].Text);
+                    userDeleteCommand.ExecuteNonQuery();
+                    connection.Close();
+                    listView1.Items.RemoveAt(listView1.SelectedItems[0].Index);
+                }
             }
         }
 
@@ -401,7 +412,7 @@ namespace member_kanri
             //listview.textをtextという変数にした
             ListView.SelectedListViewItemCollection item = listView.SelectedItems;
 
-            //listviewのかうんとが０のとき
+            //listviewが選択されてるとき
             if (listView.SelectedItems.Count > 0)
             {
                 id_box.Text = item[0].SubItems[0].Text;
@@ -416,6 +427,7 @@ namespace member_kanri
                     if (partManage[i] == item[0].SubItems[6].Text)
                     {
                         affiliation_box.SelectedIndex = i;
+                        affiliation_box.Text = item[0].SubItems[4].Text;
                     }
                 }
                 comment_box.Text = item[0].SubItems[5].Text;
@@ -498,7 +510,6 @@ namespace member_kanri
             Form part = new PartForm();
             part.ShowDialog();
         }
-
         //再読み込み
         /// <summary>
         /// 
@@ -589,7 +600,6 @@ namespace member_kanri
             MySqlConnection connection;
             //MYSQLの接続情報
             connection = new MySqlConnection("Server=118.27.38.218;Database=study;Uid=study;Pwd=kanoko20sai;Charset=utf8");
-
             // MySQLでやりたいSQL文
             String sql = "SELECT * FROM USERINFO  WHERE ID='" + sID + "'";
             MySqlCommand userInfoCommand = new MySqlCommand(sql, connection);
@@ -601,8 +611,12 @@ namespace member_kanri
             while (userReader.Read())
             {
                 //1つでも差異があった場合
-                if (userReader["NAME"].ToString() != sName || userReader["AGE"].ToString() != sAge || userReader["SEX"].ToString() != sSex ||
-                    userReader["PART"].ToString() != sPart || userReader["COMMENT"].ToString() != sComment)
+                if (userReader["ID"].ToString() != sID || 
+                    userReader["NAME"].ToString() != sName || 
+                    userReader["AGE"].ToString() != sAge || 
+                    userReader["SEX"].ToString() != sSex ||
+                    userReader["PART"].ToString() != sPart || 
+                    userReader["COMMENT"].ToString() != sComment)
                 {
                     connection.Close();
                     return TableStatus.Different;
@@ -641,4 +655,3 @@ namespace member_kanri
 
     }
 }
-
