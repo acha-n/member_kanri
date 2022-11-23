@@ -129,7 +129,8 @@ namespace member_kanri
             bool isDone = false;
 
             //まず更新なのか追加なのかを確定する。
-            for (int i = 0; i < listView1.Items.Count; i++)
+            int i;
+            for (i = 0; i < listView1.Items.Count; i++)
             {
                 // 同じものがあったばあいはtrueにする（追加できない）
                 if (listView1.Items[i].Text == id_box.Text)
@@ -144,12 +145,12 @@ namespace member_kanri
             {
                 //USERINFOの情報を持ってきて、同じIDを探す、値が同じなら普通に更新、違うのがあれば再読み込み
                 var userEdit = "SELECT ID,NAME,AGE,SEX, (SELECT NAME FROM PARTINFO WHERE ID=KEKKA.PART ) " +
-                               "AS PARTNAME ,COMMENT, PART FROM USERINFO KEKKA ORDER BY CAST(ID AS SIGNED)";
+                               "AS PARTNAME ,COMMENT, PART FROM USERINFO KEKKA " +
+                               "ORDER BY CAST(ID AS SIGNED)";
                 MySqlConnection editConnection = getConnection();
                 var editCommand = new MySqlCommand(userEdit, editConnection);
                 editConnection.Open();
                 var editReader = editCommand.ExecuteReader();
-                int i = 0;
                 string sex_num;
                 if (listView1.Items[i].SubItems[3].Text == "男")
                 {
@@ -159,14 +160,11 @@ namespace member_kanri
                 {
                     sex_num = "2";
                 }
+                //IDが存在してなかったら（削除されてたらtrue）
+                bool isDeleteFlg = true;
                 while (editReader.Read())
-
-                {  //編集しようしたIDが既に消されてた時                 
-                    if (listView1.Items[i].Text != editReader["ID"].ToString())
-                    {
-                        MessageBox.Show("削除されています", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    }
-                    else //if (listView1.Items[i].Text == editReader["ID"].ToString())
+                {
+                    if (listView1.Items[i].Text == editReader["ID"].ToString()) //if (listView1.Items[i].Text == editReader["ID"].ToString())
                     {
                         if (listView1.Items[i].SubItems[1].Text != editReader["NAME"].ToString() ||
                             listView1.Items[i].SubItems[2].Text != editReader["AGE"].ToString() ||
@@ -174,12 +172,6 @@ namespace member_kanri
                             listView1.Items[i].SubItems[5].Text != editReader["COMMENT"].ToString() ||
                             listView1.Items[i].SubItems[6].Text != editReader["PART"].ToString())
                         {
-
-                            Console.WriteLine(editReader["NAME"].ToString());
-                            Console.WriteLine(editReader["AGE"].ToString());
-                            Console.WriteLine(editReader["SEX"].ToString());
-                            Console.WriteLine(editReader["COMMENT"].ToString());
-                            Console.WriteLine(editReader["PART"].ToString());
 
                             MessageBox.Show("再読み込みしてください", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
@@ -192,6 +184,7 @@ namespace member_kanri
                             target.SubItems[3].Text = sex_box.Text;
                             target.SubItems[4].Text = affiliation_box.Text;
                             target.SubItems[5].Text = comment_box.Text;
+
 
 
                             var userUpdate = "UPDATE USERINFO SET ID=@id,NAME=@name,AGE=@age,SEX=@sex,PART=@part,COMMENT=@comment WHERE ID=@id";
@@ -276,16 +269,18 @@ namespace member_kanri
                             "WHERE ID ='" + listView1.Items[i].Text + "'";*/
                             return;
                         }
-                        //isDone = true;
-                        /*editConnection.Close();
-                        break;*/
+                        isDeleteFlg = false;
                         break;
                     }
-                  
-                    isDone = true;
-                    editConnection.Close();
-                    break;
+                   //whileの一番最後のbreakがあったら1回しかまわらなくなるので外でやる
                 }
+                editConnection.Close();
+                //編集しようしたIDが既に消されてた時                 
+                if (isDeleteFlg == true)
+                {
+                    MessageBox.Show("削除されています", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+
             }
             //追加処理（isDone=false）
             else
@@ -368,6 +363,8 @@ namespace member_kanri
                 listView1.SelectedItems[0].SubItems[3].Text,
                 listView1.SelectedItems[0].SubItems[6].Text,
                 listView1.SelectedItems[0].SubItems[5].Text);
+
+            Console.WriteLine(status);
             if (status == TableStatus.NotFound)
             {
                 MessageBox.Show("指定されたデータは既に他のユーザによって削除されています。\nリロードします。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -380,7 +377,7 @@ namespace member_kanri
                 ReloadData();
                 return;
             }
-            if (status==TableStatus.Same)
+            if (status == TableStatus.Same)
             {
                 if(MessageBox.Show("本当に削除してもよろしいですか？", "確認", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -597,6 +594,7 @@ namespace member_kanri
         /// <returns></returns>
         private TableStatus getRecordStatus(string sID, string sName, string sAge, string sSex, string sPart, string sComment)
         {
+            //sIDとかはりすとびゅーのものはいってる
             MySqlConnection connection;
             //MYSQLの接続情報
             connection = new MySqlConnection("Server=118.27.38.218;Database=study;Uid=study;Pwd=kanoko20sai;Charset=utf8");
@@ -614,7 +612,7 @@ namespace member_kanri
                 if (userReader["ID"].ToString() != sID || 
                     userReader["NAME"].ToString() != sName || 
                     userReader["AGE"].ToString() != sAge || 
-                    userReader["SEX"].ToString() != sSex ||
+                    //性別の判別する
                     userReader["PART"].ToString() != sPart || 
                     userReader["COMMENT"].ToString() != sComment)
                 {
