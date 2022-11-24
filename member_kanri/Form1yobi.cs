@@ -128,7 +128,7 @@ namespace member_kanri
             //更新したかどうかのフラグ（更新したらtrue、trueなら追加されない）
             bool isDone = false;
 
-            //まず更新なのか追加なのかを確定する。
+            //まず更新なのか追加なのかを確定する。int i=0;だと初期化されちゃう
             int i;
             for (i = 0; i < listView1.Items.Count; i++)
             {
@@ -608,11 +608,20 @@ namespace member_kanri
             // 1行ある（存在する場合）
             while (userReader.Read())
             {
+                if (userReader["SEX"].ToString() == "1")
+                {
+                    sSex = "男";
+                }
+                else
+                {
+                    sSex = "女";
+                }
                 //1つでも差異があった場合
                 if (userReader["ID"].ToString() != sID || 
                     userReader["NAME"].ToString() != sName || 
-                    userReader["AGE"].ToString() != sAge || 
+                    userReader["AGE"].ToString() != sAge ||
                     //性別の判別する
+                   // userReader["SEX"].ToString() != sSex ||
                     userReader["PART"].ToString() != sPart || 
                     userReader["COMMENT"].ToString() != sComment)
                 {
